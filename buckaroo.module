@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * @file
+ *   buckaroo.module
+ *   Payment gateway for Buckaroo
+ * @developers:
+ *    Gabor Szanto <hello@szantogabor.com>
+ *    http://szantogabor.com
+ *
+ */
