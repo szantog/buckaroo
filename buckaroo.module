@@ -102,6 +102,22 @@ function buckaroo_get_enabled($machine_name) {
   return variable_get("buckaroo_{$machine_name}_enabled", 0);
 }
 
+function buckaroo_variable_get() {
+  $vars = array(
+    'path' => variable_get('buckaroo_path', 'buckaroo'),
+    'amount_title' => variable_get('buckaroo_amount_title', 'Choose an ammount'),
+    'amount_values' => variable_get('buckaroo_amount_values', array('5', '10')),
+    'currency' => variable_get('buckaroo_amount_curr', 'EUR'),
+    'unique_amount' => variable_get('buckaroo_unique_amount', ''),
+    'method_title' => variable_get('buckaroo_method_title', 'Choose your payment method'),
+    'test' => variable_get('buckaroo_test', 0),
+  );
+  foreach (buckaroo_get_payment_methods() as $key => $value) {
+    $vars["buckaroo_{$key}_enabled"] = $value['enabled'];
+  };
+  return $vars;
+}
+
 function buckaroo_theme($existing, $type, $theme, $path) {
   if($type == 'module') {
     return array(
@@ -116,11 +132,9 @@ function buckaroo_theme($existing, $type, $theme, $path) {
 
 function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
   module_load_include('inc', 'buckaroo', 'includes/buckaroo.form');
+  $vars += buckaroo_variable_get();
   $vars += array(
-    'path' => variable_get('buckaroo_path', 'buckaroo'),
-    'amount_title' => variable_get('buckaroo_amount_title', 'Choose an ammount'),
     'amount_form' => drupal_get_form('buckaroo_amount_form'),
   );
-
   dsm(get_defined_vars());
 }

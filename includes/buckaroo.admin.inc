@@ -7,11 +7,12 @@
 
 function buckaroo_admin_form($form_state) {
   $form = array();
+  $vars = buckaroo_variable_get();
 
   $form['buckaroo_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Path'),
-    '#default_value' => variable_get('buckaroo_path', 'buckaroo'),
+    '#default_value' => $vars['path'],
     '#size' => 40,
     '#description' => t('Specify a relative URL to show Buckaroo payment form. Use "node/[nid]" path, if you want to attach form to a node.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
@@ -24,7 +25,7 @@ function buckaroo_admin_form($form_state) {
   $form['amount']['buckaroo_amount_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title of amount selection section'),
-    '#default_value' => variable_get('buckaroo_amount_title', 'Choose an ammount'),
+    '#default_value' => $vars['amount_title'],
     '#size' => 60,
     '#description' => t('Specify a the title of amount selection section.'),
   );
@@ -32,18 +33,18 @@ function buckaroo_admin_form($form_state) {
     '#title' => t('Amount values'),
     '#type' => 'textarea',
     '#description' => t('Need some text'),
-    '#default_value' => drupal_implode_tags(variable_get('buckaroo_amount_values', array('5', '10', '*'))),
+    '#default_value' => drupal_implode_tags($vars['amount_values']),
   );
   $form['amount']['buckaroo_amount_curr'] = array(
     '#type' => 'textfield',
     '#title' => t('Currency'),
-    '#default_value' => variable_get('buckaroo_amount_curr', 'EUR'),
+    '#default_value' => $vars['currency'],
     '#size' => 5,
   );
   $form['amount']['buckaroo_unique_amount'] = array(
     '#type' => 'textfield',
     '#title' => t('Unique amount text'),
-    '#default_value' => variable_get('buckaroo_unique_amount', ''),
+    '#default_value' => $vars['unique_amount'],
     '#size' => 60,
     '#description' => t('Title of unique amount textfield. Leave empty, if unique amount field is not necessary.'),
   );
@@ -51,6 +52,13 @@ function buckaroo_admin_form($form_state) {
   $form['method'] = array(
     '#type' => 'fieldset',
     '#title' => t('Enabled payment methods'),
+  );
+  $form['method']['buckaroo_method_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title of payment method section'),
+    '#default_value' => $vars['method_title'],
+    '#size' => 60,
+    '#description' => t('Specify a the title of payment method selection section.'),
   );
 
   foreach (buckaroo_get_payment_methods() as $key => $value) {
@@ -61,6 +69,13 @@ function buckaroo_admin_form($form_state) {
     );
   }
 
+  $form['buckaroo_test'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Test'),
+    '#default_value' => $vars['test'],
+    '#description' => t('Using Buckaroo payment gateway as test mode. WARNING! No valid transactions ... need text'),
+  );
+
   return system_settings_form($form);
 }
 
@@ -69,6 +84,7 @@ function buckaroo_admin_form_validate($form, &$form_state) {
 }
 
 function buckaroo_admin_form_submit($form, &$form_state) {
+  //Rebuild menu, if path changed.
   if ($form['buckaroo_path']['#default_value'] != $form_state['values']['buckaroo_path']) {
     menu_rebuild();
   }
