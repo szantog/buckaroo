@@ -161,7 +161,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for successful payments.
     'BPE_Return_Success' => array(
       '#type' => 'hidden',
-      '#value' => '',
+      '#value' => 'http://www.panparks.org/node/3437',
       'used' => array (
         'all'
       )
@@ -169,7 +169,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for payments rejected by PayPal (processor).
     'BPE_Return_Reject' => array(
       '#type' => 'hidden',
-      '#value' => '',
+      '#value' => 'http://www.panparks.org/node/3437',
       'used' => array (
         'all'
       )
@@ -177,7 +177,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for payments that cannot be processed due to a technical malfunction.
     'BPE_Return_Error' => array(
       '#type' => 'hidden',
-      '#value' => '',
+      '#value' => 'http://www.panparks.org/node/3437',
       'used' => array (
         'all'
       )
