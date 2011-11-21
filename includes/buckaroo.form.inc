@@ -101,7 +101,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //The transaction amount in cents. *
     'BPE_Amount' => array(
       '#type' => 'hidden',
-      '#value' => isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0],
+      '#value' => isset($_GET['default_amount']) ? $_GET['default_amount'] * 100 : $vars['amount_values'][0] * 100,
       '#attributes' => array(
         'class' => 'BPE_Amount'
       ),

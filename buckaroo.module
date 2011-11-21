@@ -175,6 +175,8 @@ function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
 
 function buckaroo_create_signature($machine_name) {
   $vars = buckaroo_variable_get();
-  $string = $vars['merchant_key'] . isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0] . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
+  $ammount = isset($_GET['default_amount']) ? $_GET['default_amount'] * 100 : $vars['amount_values'][0] * 100;
+  $string = $vars['merchant_key'] . $ammount . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
+  dsm(get_defined_vars());
   return md5($string);
 }
