@@ -43,7 +43,7 @@ function buckaroo_menu() {
     'file' => 'includes/buckaroo.admin.inc',
   );
 
-  $buckaroo_menu = variable_get('buckaroo_path', 'buckaroo');
+  $buckaroo_menu = variable_get('BPE_path', 'buckaroo');
 
   if (substr($buckaroo_menu, 0, 4) != 'node') {
     $items[$buckaroo_menu] = array(
@@ -104,7 +104,7 @@ function buckaroo_get_payment_methods() {
 }
 
 function buckaroo_get_enabled($machine_name) {
-  return variable_get("buckaroo_{$machine_name}_enabled", 0);
+  return variable_get("BPE_{$machine_name}_enabled", 0);
 }
 
 /**
@@ -114,13 +114,13 @@ function buckaroo_get_enabled($machine_name) {
  */
 function buckaroo_variable_get() {
   $vars = array(
-    'path' => variable_get('buckaroo_path', 'buckaroo'),
-    'amount_title' => variable_get('buckaroo_amount_title', 'Choose an ammount'),
-    'amount_values' => variable_get('buckaroo_amount_values', array('5', '10')),
-    'currency' => variable_get('buckaroo_amount_curr', 'EUR'),
-    'unique_amount' => variable_get('buckaroo_unique_amount', ''),
-    'method_title' => variable_get('buckaroo_method_title', 'Choose your payment method'),
-    'test' => variable_get('buckaroo_test', 0),
+    'path' => variable_get('BPE_path', 'buckaroo'),
+    'amount_title' => variable_get('BPE_amount_title', 'Choose an ammount'),
+    'amount_values' => variable_get('BPE_amount_values', array('5', '10')),
+    'currency' => variable_get('BPE_Currency', 'EUR'),
+    'unique_amount' => variable_get('BPE_unique_amount', ''),
+    'method_title' => variable_get('BPE_method_title', 'Choose your payment method'),
+    'mode' => variable_get('BPE_Mode', 0),
   );
   $vars += buckaroo_get_payment_methods();
   return $vars;
