@@ -115,6 +115,8 @@ function buckaroo_get_enabled($machine_name) {
 function buckaroo_variable_get() {
   $vars = array(
     'path' => variable_get('BPE_path', 'buckaroo'),
+    'merchant_key' => variable_get('BPE_Merchant', ''),
+    'secret_key' => variable_get('BPE_SecretKey', ''),
     'amount_title' => variable_get('BPE_amount_title', 'Choose an ammount'),
     'amount_values' => variable_get('BPE_amount_values', array('5', '10')),
     'currency' => variable_get('BPE_Currency', 'EUR'),
@@ -162,6 +164,10 @@ function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
   foreach ($methods as $key => $method) {
     if ($method['enabled'] && function_exists("buckaroo_{$key}_form")) {
       $vars['method_forms'][$key] = drupal_get_form("buckaroo_{$key}_form");
+      $vars['method_forms'][$key]['BPE_Reference'] = array(
+        '#type' => 'hidden',
+        '#value' => $vars['method_forms'][$key]['#build_id'],
+      );
     }
   }
   dsm(get_defined_vars());

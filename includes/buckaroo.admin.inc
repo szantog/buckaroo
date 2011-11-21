@@ -9,7 +9,12 @@ function buckaroo_admin_form($form_state) {
   $form = array();
   $vars = buckaroo_variable_get();
 
-  $form['BPE_path'] = array(
+  $form['basic'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Buckaroo basic data'),
+  );
+
+  $form['basic']['BPE_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Path'),
     '#default_value' => $vars['path'],
@@ -18,6 +23,23 @@ function buckaroo_admin_form($form_state) {
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
     '#required' => TRUE,
   );
+  $form['basic']['BPE_Merchant'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Merchant key'),
+    '#default_value' => $vars['merchant_key'],
+    '#size' => 60,
+    '#description' => t('The merchant key of website.'),
+    '#required' => TRUE,
+  );
+  $form['basic']['BPE_ SecretKey'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Secret key'),
+    '#default_value' => $vars['secret_key'],
+    '#size' => 60,
+    '#description' => t('The secret key of website.'),
+    '#required' => TRUE,
+  );
+
   $form['amount'] = array(
     '#type' => 'fieldset',
     '#title' => t('Ammount selection settings'),
