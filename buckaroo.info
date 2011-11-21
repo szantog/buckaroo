@@ -3,4 +3,3 @@ description = Buckaroo payment gateway
 package = Payment API
 core = 7.x
 
-dependencies[] = pay

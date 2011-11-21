@@ -9,3 +9,118 @@
  *    http://szantogabor.com
  *
  */
+
+/**
+ * Implementation of hook_perm().
+ *
+ * @return array An array of valid permissions for the buckaroo module
+ */
+function buckaroo_permission() {
+  return array(
+    'administer buckaroo' => array(
+      'title' => t('Administer Buckaroo'),
+      'description' => t('Administer buckaroo'),
+    ),
+    'access buckaroo' => array(
+      'title' => t('Access Buckaroo payment form'),
+    ),
+  );
+}
+/**
+ * Implementation of hook_menu().
+ *
+ * @return An array of menu items.
+ */
+function buckaroo_menu() {
+  $items = array();
+
+  $items['admin/config/buckaroo'] = array(
+    'title' => 'Buckaroo',
+    'description' => 'Settings for Buckaroo payment gateway.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('buckaroo_admin_form'),
+    'access arguments' => array('administer buckaroo'),
+    'file' => 'includes/buckaroo.admin.inc',
+  );
+
+  $buckaroo_menu = variable_get('buckaroo_path', 'buckaroo');
+
+  if (substr($buckaroo_menu, 0, 4) != 'node') {
+    $items[$buckaroo_menu] = array(
+      'title' => 'Buckaroo payment page',
+      'page callback' => 'theme',
+      'page arguments' => array('buckaroo_payment_form'),
+      'access arguments' => array('access buckaroo'),
+      'file' => 'includes/buckaroo.form.inc',
+    );
+  }
+
+//  if (!menu_get_item($buckaroo_menu)) {
+//
+//  }
+
+  return $items;
+}
+
+function buckaroo_form_alter(&$form, $form_state, $form_id) {
+  //dsm($form_id);
+}
+
+/*
+ * Implements hook_form_FORM_ID_alter
+ * Need to alter our admin form, because our submit function need to run last
+ */
+function buckaroo_form_buckaroo_admin_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'buckaroo_admin_form_submit';
+}
+
+function buckaroo_get_payment_methods() {
+  $defaults = array(
+    'cc' => array(
+      'name'=> 'Credit cards',
+     ),
+    'ideal' => array(
+      'name'=> 'iDEAL',
+     ),
+    'gp' => array(
+      'name'=> 'Giropay',
+     ),
+    'pp' => array(
+      'name'=> 'PayPal',
+     ),
+    'oodb' => array(
+      'name'=> 'Once-only and continuous direct debits',
+     ),
+   );
+  foreach ($defaults as $key => &$value) {
+    $value['enabled'] = buckaroo_get_enabled($key) ;
+  }
+  return $defaults;
+}
+
+function buckaroo_get_enabled($machine_name) {
+  return variable_get("buckaroo_{$machine_name}_enabled", 0);
+}
+
+function buckaroo_theme($existing, $type, $theme, $path) {
+  if($type == 'module') {
+    return array(
+      'buckaroo_payment_form' => array(
+        'template' => 'buckaroo-form',
+        'path' => drupal_get_path('module', 'buckaroo') . '/theme',
+      ),
+    );
+  }
+  return array(); //will raise fatal error if void
+}
+
+function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
+  module_load_include('inc', 'buckaroo', 'includes/buckaroo.form');
+  $vars += array(
+    'path' => variable_get('buckaroo_path', 'buckaroo'),
+    'amount_title' => variable_get('buckaroo_amount_title', 'Choose an ammount'),
+    'amount_form' => drupal_get_form('buckaroo_amount_form'),
+  );
+
+  dsm(get_defined_vars());
+}
