@@ -31,7 +31,7 @@ function buckaroo_admin_form($form_state) {
     '#description' => t('The merchant key of website.'),
     '#required' => TRUE,
   );
-  $form['basic']['BPE_ SecretKey'] = array(
+  $form['basic']['BPE_SecretKey'] = array(
     '#type' => 'textfield',
     '#title' => t('Secret key'),
     '#default_value' => $vars['secret_key'],
