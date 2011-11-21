@@ -34,18 +34,18 @@ function buckaroo_amount_form($form_state) {
 }
 
 function buckaroo_cc_form($form_state) {
-  $form = array(
-    '#action' => 'https://payment.buckaroo.nl/gateway/paypal_payment.asp',
-
-    'submit' => array(
-      '#type' => 'submit',
-      '#value' => t('Paypal'),
-      '#attributes' => array(
-        'id' => 'pp_submit'
-      )
-    ),
-  );
-  $form += buckaroo_get_hidden_elements('pp');
+//  $form = array(
+//    '#action' => 'https://payment.buckaroo.nl/gateway/paypal_payment.asp',
+//
+//    'submit' => array(
+//      '#type' => 'submit',
+//      '#value' => t('Paypal'),
+//      '#attributes' => array(
+//        'id' => 'pp_submit'
+//      )
+//    ),
+//  );
+  //$form += buckaroo_get_hidden_elements('pp');
   return $form;
 }
 
@@ -65,10 +65,26 @@ function buckaroo_pp_form($form_state) {
   return $form;
 }
 
+function buckaroo_ideal_form($form_state) {
+  $form = array(
+    '#action' => 'https://payment.buckaroo.nl/gateway/ideal_payment.asp',
+
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Ideal'),
+      '#attributes' => array(
+        'id' => 'pp_submit'
+      )
+    ),
+  );
+  $form += buckaroo_get_hidden_elements('pp');
+  return $form;
+}
+
 function buckaroo_get_hidden_elements($machine_name) {
   $vars = buckaroo_variable_get();
   //Look at BPE_Return_Method
-  $need_post_method = array('pp');
+  $need_post_method = array('pp', 'ideal');
   $return = array();
 
   $elements = array(
@@ -79,7 +95,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' => '',
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //The transaction amount in cents. *
@@ -90,15 +106,24 @@ function buckaroo_get_hidden_elements($machine_name) {
         'class' => 'BPE_Amount'
       ),
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //The code for the currency in which the transaction is to be made. *
     'BPE_Currency' => array(
       '#type' => 'hidden',
-      '#value' => $vars['currency'],
+      //Ideal only supports EUR
+      '#value' => $machine_name == 'ideal' ? 'EUR' : $vars['currency'],
       'used' => array (
-        'pp'
+        'all'
+      )
+    ),
+    //The code of the preselected bank in this field. If this value is specified, Buckaroo‟s selection creen will not appear. Your customer will be redirected to the bank‟s screen instead.
+    'BPE_Issuer' => array(
+      '#type' => 'hidden',
+      '#value' => '',
+      'used' => array (
+        'ideal'
       )
     ),
     //short transaction description.
@@ -112,7 +137,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Language code for the user interface language:NL = Dutch EN = English;
     'BPE_Language' => array(
       '#type' => 'hidden',
-      '#value' => 'US',
+      '#value' => 'EN',
       'used' => array (
         'pp'
       )
@@ -122,7 +147,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' => $vars['mode'],
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //The digital signature to authenticate your website as sender. *
@@ -138,7 +163,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' => '',
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //Specify a different URL for the return page for payments rejected by PayPal (processor).
@@ -146,7 +171,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' => '',
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //Specify a different URL for the return page for payments that cannot be processed due to a technical malfunction.
@@ -154,7 +179,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' => '',
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //Specify how result parameters should be passed to your response pages:
@@ -167,7 +192,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     ),
   );
   foreach ($elements as $key => $element) {
-    if (in_array($machine_name, $element['used'])) {
+    if (in_array($machine_name, $element['used']) || in_array('all', $element['used'])) {
       unset($element['used']);
       $return[$key] = $element;
     }
