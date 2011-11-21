@@ -11,31 +11,34 @@ function buckaroo_payment_form($form_state) {
 function buckaroo_amount_form($form_state) {
   $form = array();
   $values = array();
-  $currency = variable_get('buckaroo_amount_curr', 'EUR');
-  $var_values = variable_get('buckaroo_amount_values', array('5', '10', '*'));
-  $unique_amount = variable_get('buckaroo_unique_amount', '');
+  $vars = buckaroo_variable_get();
 
-
-  foreach ($var_values as $value) {
-    if ($value != '*') {
-      $values[$value] = $value . ' ' . $currency;
-    }
+  foreach ($vars['amount_values'] as $value) {
+    $values[$value] = $value . ' ' . $vars['currency'];
   }
-
   $form['amount'] = array(
     '#type' => 'radios',
-    '#default_value' => isset($_GET['default_amount']) ? $_GET['default_amount'] : $var_values[0],
+    '#default_value' => isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0],
     '#options' => $values,
   );
 
-  if ($unique_amount != '') {
+  if ($vars['unique_amount'] != '') {
     $form['uniqueamount'] = array(
       '#type' => 'textfield',
-      '#title' => $unique_amount,
+      '#title' => $vars['unique_amount'],
       '#size' => 15,
-      '#field_suffix' => $currency,
+      '#field_suffix' => $vars['currency'],
     );
   }
-  dsm(get_defined_vars());
+  return $form;
+}
+
+function buckaroo_cc_form($form_state) {
+  $form = array();
+  return $form;
+}
+
+function buckaroo_pp_form($form_state) {
+  $form = array();
   return $form;
 }

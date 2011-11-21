@@ -11,7 +11,7 @@
  */
 
 /**
- * Implementation of hook_perm().
+ * Implements of hook_perm().
  *
  * @return array An array of valid permissions for the buckaroo module
  */
@@ -27,7 +27,7 @@ function buckaroo_permission() {
   );
 }
 /**
- * Implementation of hook_menu().
+ * Implemens hook_menu().
  *
  * @return An array of menu items.
  */
@@ -74,6 +74,11 @@ function buckaroo_form_buckaroo_admin_form_alter(&$form, &$form_state) {
   $form['#submit'][] = 'buckaroo_admin_form_submit';
 }
 
+/**
+ * Get all payment methods, it's names and it's enabled or not
+ * @return array
+ *   And array of predefined payment methods
+ */
 function buckaroo_get_payment_methods() {
   $defaults = array(
     'cc' => array(
@@ -102,6 +107,11 @@ function buckaroo_get_enabled($machine_name) {
   return variable_get("buckaroo_{$machine_name}_enabled", 0);
 }
 
+/**
+ * Get all Buckaroo variables
+ * @return array
+ *   An array of all variables defined by this module
+ */
 function buckaroo_variable_get() {
   $vars = array(
     'path' => variable_get('buckaroo_path', 'buckaroo'),
@@ -112,12 +122,18 @@ function buckaroo_variable_get() {
     'method_title' => variable_get('buckaroo_method_title', 'Choose your payment method'),
     'test' => variable_get('buckaroo_test', 0),
   );
-  foreach (buckaroo_get_payment_methods() as $key => $value) {
-    $vars["buckaroo_{$key}_enabled"] = $value['enabled'];
-  };
+  $vars += buckaroo_get_payment_methods();
   return $vars;
 }
 
+/**
+ * Implements hook_theme
+ * @param type $existing
+ * @param type $type
+ * @param type $theme
+ * @param type $path
+ * @return type
+ */
 function buckaroo_theme($existing, $type, $theme, $path) {
   if($type == 'module') {
     return array(
@@ -130,11 +146,23 @@ function buckaroo_theme($existing, $type, $theme, $path) {
   return array(); //will raise fatal error if void
 }
 
+/**
+ * Preprocess function to create variables for buckaroo-form.tpl.php
+ * @param array $vars
+ *
+ */
 function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
   module_load_include('inc', 'buckaroo', 'includes/buckaroo.form');
+  $methods = buckaroo_get_payment_methods() ;
   $vars += buckaroo_variable_get();
   $vars += array(
     'amount_form' => drupal_get_form('buckaroo_amount_form'),
   );
+
+  foreach ($methods as $key => $method) {
+    if ($method['enabled'] && function_exists("buckaroo_{$key}_form")) {
+      $vars['method_forms'][$key] = drupal_get_form("buckaroo_{$key}_form");
+    }
+  }
   dsm(get_defined_vars());
 }
