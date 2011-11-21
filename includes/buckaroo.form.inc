@@ -34,11 +34,143 @@ function buckaroo_amount_form($form_state) {
 }
 
 function buckaroo_cc_form($form_state) {
-  $form = array();
+  $form = array(
+    '#action' => 'https://payment.buckaroo.nl/gateway/paypal_payment.asp',
+
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Paypal'),
+      '#attributes' => array(
+        'id' => 'pp_submit'
+      )
+    ),
+  );
+  $form += buckaroo_get_hidden_elements('pp');
   return $form;
 }
 
 function buckaroo_pp_form($form_state) {
-  $form = array();
+  $form = array(
+    '#action' => 'https://payment.buckaroo.nl/gateway/paypal_payment.asp',
+
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Paypal'),
+      '#attributes' => array(
+        'id' => 'pp_submit'
+      )
+    ),
+  );
+  $form += buckaroo_get_hidden_elements('pp');
   return $form;
+}
+
+function buckaroo_get_hidden_elements($machine_name) {
+  $vars = buckaroo_variable_get();
+  //Look at BPE_Return_Method
+  $need_post_method = array('pp');
+  $return = array();
+
+  $elements = array(
+    //The merchant key you received from Buckaroo. This code ensures that the transaction is credited to your
+    //account. If you have more than one website, you will have received several unique merchant keys:
+    //one for each website. *
+    'BPE_Merchant' => array(
+      '#type' => 'hidden',
+      '#value' => '',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //The transaction amount in cents. *
+    'BPE_Amount' => array(
+      '#type' => 'hidden',
+      '#value' => isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0],
+      '#attributes' => array(
+        'class' => 'BPE_Amount'
+      ),
+      'used' => array (
+        'pp'
+      )
+    ),
+    //The code for the currency in which the transaction is to be made. *
+    'BPE_Currency' => array(
+      '#type' => 'hidden',
+      '#value' => $vars['currency'],
+      'used' => array (
+        'pp'
+      )
+    ),
+    //short transaction description.
+    'BPE_Description' => array(
+      '#type' => 'hidden',
+      '#value' => 'need something..',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //Language code for the user interface language:NL = Dutch EN = English;
+    'BPE_Language' => array(
+      '#type' => 'hidden',
+      '#value' => 'US',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //Parameter mode: 0 = full processing 1 = test mode
+    'BPE_Mode' => array(
+      '#type' => 'hidden',
+      '#value' => $vars['mode'],
+      'used' => array (
+        'pp'
+      )
+    ),
+    //The digital signature to authenticate your website as sender. *
+    'BPE_Signature2' => array(
+      '#type' => 'hidden',
+      '#value' => '',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //Specify a different URL for the return page for successful payments.
+    'BPE_Return_Success' => array(
+      '#type' => 'hidden',
+      '#value' => '',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //Specify a different URL for the return page for payments rejected by PayPal (processor).
+    'BPE_Return_Reject' => array(
+      '#type' => 'hidden',
+      '#value' => '',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //Specify a different URL for the return page for payments that cannot be processed due to a technical malfunction.
+    'BPE_Return_Error' => array(
+      '#type' => 'hidden',
+      '#value' => '',
+      'used' => array (
+        'pp'
+      )
+    ),
+    //Specify how result parameters should be passed to your response pages:
+    'BPE_Return_Method' => array(
+      '#type' => 'hidden',
+      '#value' => in_array($machine_name, $need_post_method) ? 'POST' : 'GET',
+      'used' => array (
+        'pp'
+      )
+    ),
+  );
+  foreach ($elements as $key => $element) {
+    if (in_array($machine_name, $element['used'])) {
+      unset($element['used']);
+      $return[$key] = $element;
+    }
+  }
+  return $return;
 }
