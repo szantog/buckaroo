@@ -93,7 +93,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //one for each website. *
     'BPE_Merchant' => array(
       '#type' => 'hidden',
-      '#value' => '',
+      '#value' => $vars['merchant_key'],
       'used' => array (
         'all'
       )
@@ -153,7 +153,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //The digital signature to authenticate your website as sender. *
     'BPE_Signature2' => array(
       '#type' => 'hidden',
-      '#value' => '',
+      '#value' =>  buckaroo_create_signature($machine_name),
       'used' => array (
         'pp'
       )
