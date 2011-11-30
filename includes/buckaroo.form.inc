@@ -87,6 +87,9 @@ function buckaroo_get_hidden_elements($machine_name) {
   $need_post_method = array('pp', 'ideal');
   $return = array();
 
+  global $base_url;
+  $path = $base_url . '/buckaroo';
+
   $elements = array(
     //The merchant key you received from Buckaroo. This code ensures that the transaction is credited to your
     //account. If you have more than one website, you will have received several unique merchant keys:
@@ -161,7 +164,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for successful payments.
     'BPE_Return_Success' => array(
       '#type' => 'hidden',
-      '#value' => 'http://www.panparks.org/node/3437',
+      '#value' => $path,
       'used' => array (
         'all'
       )
@@ -169,7 +172,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for payments rejected by PayPal (processor).
     'BPE_Return_Reject' => array(
       '#type' => 'hidden',
-      '#value' => 'http://www.panparks.org/node/3437',
+      '#value' => $path,
       'used' => array (
         'all'
       )
@@ -177,7 +180,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for payments that cannot be processed due to a technical malfunction.
     'BPE_Return_Error' => array(
       '#type' => 'hidden',
-      '#value' => 'http://www.panparks.org/node/3437',
+      '#value' => $path,
       'used' => array (
         'all'
       )
@@ -188,6 +191,20 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#value' => in_array($machine_name, $need_post_method) ? 'POST' : 'GET',
       'used' => array (
         'pp'
+      )
+    ),
+    'BPE_Reference' => array(
+      '#type' => 'hidden',
+      '#value' => 'test',
+      'used' => array (
+        'all'
+      )
+    ),
+    'BPE_Invoice' => array(
+      '#type' => 'hidden',
+      '#value' => buckaroo_create_invoice(),
+      'used' => array (
+        'all'
       )
     ),
   );

@@ -11,6 +11,12 @@
  */
 
 /**
+ * Implementation of hook_init().
+ */
+function buckaroo_init() {
+  dsm($GLOBALS['_POST']);
+}
+/**
  * Implements of hook_perm().
  *
  * @return array An array of valid permissions for the buckaroo module
@@ -164,19 +170,18 @@ function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
   foreach ($methods as $key => $method) {
     if ($method['enabled'] && function_exists("buckaroo_{$key}_form")) {
       $vars['method_forms'][$key] = drupal_get_form("buckaroo_{$key}_form");
-      $vars['method_forms'][$key]['BPE_Reference'] = array(
-        '#type' => 'hidden',
-        '#value' => $vars['method_forms'][$key]['#build_id'],
-      );
     }
   }
-  dsm(get_defined_vars());
 }
 
 function buckaroo_create_signature($machine_name) {
   $vars = buckaroo_variable_get();
   $ammount = isset($_GET['default_amount']) ? $_GET['default_amount'] * 100 : $vars['amount_values'][0] * 100;
-  $string = $vars['merchant_key'] . $ammount . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
-  dsm(get_defined_vars());
+  $string = $vars['merchant_key'] . buckaroo_create_invoice() .$ammount . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
   return md5($string);
+}
+
+function buckaroo_create_invoice() {
+  $invoice = &drupal_static(__FUNCTION__, "panparks-" . time());
+  return $invoice;
 }
