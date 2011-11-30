@@ -34,18 +34,24 @@ function buckaroo_amount_form($form_state) {
 }
 
 function buckaroo_cc_form($form_state) {
-//  $form = array(
-//    '#action' => 'https://payment.buckaroo.nl/gateway/paypal_payment.asp',
-//
-//    'submit' => array(
-//      '#type' => 'submit',
-//      '#value' => t('Paypal'),
-//      '#attributes' => array(
-//        'id' => 'pp_submit'
-//      )
+  $form = array(
+    //'#submit' => array('buckaroo_xmlrpc'),
+
+    '#action' => 'https://payment.buckaroo.nl/sslplus/request_for_authorization.asp',
+//    //This need for iframe
+//    '#attributes' => array('target' => 'BPE'),
+//    'iframe' => array (
+//      '#markup' => '<IFRAME NAME="BPE" ID="BPE" width="300" height="300" CLASS="" frameborder="0" scrolling="no" SRC="about:blank"></IFRAME>'
 //    ),
-//  );
-  //$form += buckaroo_get_hidden_elements('pp');
+    'submit' => array(
+      '#type' => 'submit',
+      '#value' => t('Credit card'),
+      '#attributes' => array(
+        'id' => 'pp_submit'
+      )
+    ),
+  );
+  $form += buckaroo_get_hidden_elements('pp');
   return $form;
 }
 
