@@ -15,9 +15,19 @@
  */
 function buckaroo_init() {
   $post = $GLOBALS['_POST'];
-  if (!empty($post['bpe_result'])) {
 
+  if (!empty($post['bpe_result'])) {
+    $error_codes = _buckaroo_get_error_codes();
+    if ($error_codes[$post['bpe_result']]) {
+      $status = $error_codes[$post['bpe_result']]['error_level'];
+      //Change 'success' to drupal_set_message default status
+      if ($status == 'success') {
+        $status = 'status' ;
+      }
+      drupal_set_message($error_codes[$post['bpe_result']]['message'], $status);
+    }
   }
+  dsm(get_defined_vars());
 }
 /**
  * Implements of hook_perm().
@@ -178,7 +188,6 @@ function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
     }
   }
   $vars += array('crm_form' => drupal_get_form('buckaroo_crm_form'));
-  dsm(get_defined_vars());
 }
 
 function buckaroo_create_signature($machine_name) {
@@ -221,9 +230,37 @@ function buckaroo_xmlrpc($form, $form_state) {
       array('@response' => print_r($result, TRUE)))
     );
   }
-  dsm(get_defined_vars());
 }
 
-function buckaroo_set_message($result_code) {
-  $error = array();
+/**
+ * Helper function to read statuscodes.csv
+ *
+ * @return array
+ */
+function _buckaroo_get_error_codes() {
+  $file = drupal_get_path('module', 'buckaroo') . '/statuscodes.csv';
+
+  $header = array('status_code', 'message', 'error_level');;
+  $data = array();
+  $csvData = str_getcsv($file, "\n");
+
+  foreach ($csvData as $csvLine) {
+      $items = explode(';', $csvLine);
+      for ($n = 0, $m = count($header); $n < $m; $n++) {
+        $prepareData[$header[$n]] = $items[$n];
+      }
+      $data[$prepareData['status_code']] = $prepareData;
+  }
+  return $data;
+}
+
+/**
+ * Parse
+ *
+ * @param type $input
+ * @param type $delimiter
+ * @return type
+ */
+function _buckaroo_csv_to_array($input, $delimiter=',') {
+
 }
