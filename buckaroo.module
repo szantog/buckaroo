@@ -14,7 +14,10 @@
  * Implementation of hook_init().
  */
 function buckaroo_init() {
-  dsm($GLOBALS['_POST']);
+  $post = $GLOBALS['_POST'];
+  if (!empty($post['bpe_result'])) {
+
+  }
 }
 /**
  * Implements of hook_perm().
@@ -219,4 +222,8 @@ function buckaroo_xmlrpc($form, $form_state) {
     );
   }
   dsm(get_defined_vars());
+}
+
+function buckaroo_set_message($result_code) {
+  $error = array();
 }

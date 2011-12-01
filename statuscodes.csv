@@ -1,0 +1,211 @@
+0, The credit card transaction is pending.,warning
+1, The credit card transaction is pending. The MPI status of the customer is checked.,warning
+70, The refund is not processed.,error
+71, The refund has been processed successfully.,success
+72, There is an error in the refund.,error
+73, The credit has been canceled.,error
+74, Refund canceled. Insufficient funds.,error
+75, Refund failed. Invalid account numbers.,error
+76, The credit is refundable due to incorrect bank account details,error
+90, This transaction has not yet been fully processed.,warning
+91, This transaction was successfully processed.,success
+100, The transaction was approved by the credit company.,success
+101, The transaction is rejected by the credit company.,error
+102, The transaction failed. There is an error in processing the loan society.,error
+103, This credit card transaction is not executed within the maximum allowable time.,error
+104, The card has expired.,error
+105, Retrieval - Pending,warning
+106, Chargeback,warning
+120, This PayPal transaction has not been fully processed.,warning
+121, Transaction Status: authorization failed,error
+122, This PayPal transaction is canceled by the consumer.,error
+123, This PayPal transaction is not within the maximum time allowed out.,error
+124, This PayPal transaction with PayPal for some reason failed.,error
+125, This PayPal transaction is not accepted.,error
+126, This PayPal transaction is pending.,warning
+135, This PayPal transaction has not been fully processed.,warning
+136, For technical reason the status of this transaction with PayPal is not exposed. The transaction may not yet finalized.,warning
+137, The depreciation code is invalid.,error
+138, There is a system error at PayPal. We apologize for the inconvenience.,error
+139, The PayPal transaction ID is invalid or unavailable.,error
+150, Paysafecard this transaction is not yet fully processed.,warning
+151, Transaction Status: authorization failed,error
+152, Paysafecard this transaction was canceled by the consumer.,error
+153, Paysafecard this transaction is within the maximum time allowed out.,error
+155, Paysafecard this transaction is not accepted.,error
+156, Paysafecard this transaction is not yet fully processed.,warning
+157, For technical reason the status of this transaction with Paysafecard not be traced. The transaction may not yet finalized.,warning
+158, There is a system error with Paysafecard. We apologize for the inconvenience.,error
+159, The paysafecard transaction ID is invalid or unavailable.,error
+170, These Cash-Ticket transaction is not yet fully processed.,warning
+171, Transaction Status: authorization failed,error
+172, These Cash-Ticket transaction is canceled by the consumer.,error
+173, These Cash-Ticket transactions are not within the maximum time allowed out.,error
+175, These Cash-Ticket transactions are not accepted.,error
+176, These Cash-Ticket transaction is not yet fully processed.,warning
+177, For technical reason the status of this transaction are not with Cash-Ticket will be obsolete. The transaction may not yet finalized.,warning
+178, There is a system error occurred at Cash-Ticket. We apologize for the inconvenience.,error
+179, The Cash-Ticket transaction ID is invalid or unavailable.,error
+190, Success,success
+201, There is a timeout occurred while processing the transactie.Gebruik the TransactionKey to re-check the processing status.,error
+203, The transaction was declined. The credit card number is blocked.,error
+204, The transaction was declined. The IP address is blocked,error
+205, The transaction was declined. The country of issuance of this card is blocked,error
+206, The transaction was declined. The bill [value] is being or has been paid.,error
+207, The transaction was declined. The maximum number of attempts to pay bill [value] is exceeded.,error
+242, Commission payment processes guarantee a successful,success
+243, Fee collection agency guarantees payment successfully processed,success
+244, Buckaroo commission payment processes guarantee a successful,success
+245, Cost button collection agency guarantees payment successfully processed,success
+246, Tax collection agency guarantees payment successfully processed,success
+247, Buckaroo tax payment guarantee successful processing,success
+251, guarantee payment request is canceled,error
+252, guarantee payment request rejected,error
+253, guarantee payment request is not processed,error
+254, guarantee payment request processed successfully,success
+255, Credit note processed successfully,success
+260, Credit control is not active subscription,error
+261, Technical error occurred credit check,error
+262, Required fields are missing or incorrect credit check,error
+264, The payment guarantee payment is reversed.,error
+300, Payment for this transfer is still awaited.,warning
+301, The transfer was received.,success
+302, The transaction is declined or rejected.,error
+303, The due date for this transfer has expired.,error
+304, The date of notice has expired.,error
+305, The amount received for the transfer is less than the amount of the transaction.,error
+306, The amount received for the transfer is greater than the amount of the transaction.,error
+309, The transfer was canceled.,error
+345, Original transaction amount divided; new transactions created.,error
+372, Crediting external account.,success
+390, The transaction is outside Buckaroo dealt with the client.,error
+392, Otherwise paid,error
+400, The gift card transaction is still pending,warning
+401, The payment by successful gift card.,success
+402, Payment by the gift card was rejected.,error
+409, Payment by the gift card is canceled.,error
+410, The Merchant Account Code is invalid,error
+411, Payment by card kad tentatively accepted.,success
+414, A system error has occurred.,error
+421, An unknown Issuer for the gift card given.,error
+422, There is an error in the Issuer. The payment has failed. [Value].,error
+425, Not enough funds to carry out this transaction.,error
+460, Pending,warning
+461, Transaction completed,success
+462, Transaction completed,success
+463, Transaction completed,success
+464, Transaction completed,success
+466, Rejected by the collection agency:,error
+468, Original invoice for the application is not found,error
+490, Failed,error
+491, Validation Error,error
+492, Technical fault,error
+500, Paypermail: transaction pending,warning
+501, Online transaction processing transfer,warning
+541, Transaction costs are deducted from net,warning
+550, The payout has not been processed.,error
+551, The payment is successfully processed.,success
+552, The payout has been canceled.,error
+553, The payment has failed.,error
+554, Payment canceled. Insufficient funds.,error
+555, Payment failed. Invalid account numbers.,error
+556, The payment is refunded by the bank due to incorrect account information,error
+560, Payment adjustment performed by Buckaroo.,success
+581, Transfer to or from another account Buck,success
+590, The partner fee is processed.,success
+600, Debit has not been processed.,error
+601, Debit has been successfully processed.,success
+602, Debit is rejected by the bank.,error
+605, Debit is reversed.,error
+609, Debit is canceled before collection occurred.,error
+610, Debit is rejected by the bank. Invalid account.,error
+612, Reversal due Reporting Incorrect Collection,error
+690, Rejected,error
+700, The payment order is accepted and processed.,success
+701, The payment order is processed.,success
+702, The payment order is returned due to incorrect bank account details,error
+703, The payment order is rejected by Buckaroo.,error
+704, Payment Order canceled,error
+705, The batch could not be scheduled. Error: [value],error
+706, Payment Operation failed. Invalid account numbers.,error
+707, Pay Job canceled. Insufficient funds.,error
+708, The payment order is returned due to incorrect bank account details,error
+710, Payment Order not be confirmed.,error
+711, The batch could not be found: [value].,error
+712, The batch has been processed: [value].,success
+720, There is no transaction for this batch client ID specified.,error
+721, The specified client ID could not be found: [value].,error
+790, Pending input,warning
+791, Pending Processing,warning
+800, This PayPal transaction has not yet been fully processed.,warning
+801, This PayPal transaction has been successfully processed.,success
+802, This PayPal transaction has been canceled by the consumer. Trx: [value],error
+803, This PayPal transaction is not within the maximum time allowed out. Trx: [value],error
+804, This PayPal transaction for some reason the bank failed. Trx: [value],error
+810, Issuer (bank) is unknown: [value],error
+811, For technical reason the status of this transaction at the bank are not yet obsolete. The transaction is still ongoing.,warning
+812, The entrance code [value] is invalid.,error
+813, Acquirer code is unknown: [value].,error
+814, There is a system error. We will resolve this as quickly as possible. The status will then be reviewed.,warning
+815," At present, the iDEAL payment not available due to a malfunction in the bank",error
+816, There was no transaction to be found. Criteria: [value],error
+820, Giropay this transaction is not yet fully processed.,warning
+821, Giropay this transaction was successfully processed.,success
+822, Giropay this transaction was canceled by the consumer. Trx: [value],error
+823, Giropay this transaction is within the maximum time allowed out. Trx: [value],error
+824, Giropay this transaction was rejected by the bank.,error
+830, Issuer (bankleitzahl) is unknown: [value],error
+831, For technical reason the status of this transaction at the bank are not yet obsolete. The transaction is still ongoing.,warning
+833, The entrance code [value] is invalid.,error
+834, There is a system error. We will resolve this as quickly as possible. The status will then be reviewed.,warning
+835, Giropay The transaction ID is invalid or unavailable.,error
+836, There was no transaction to be found. Criteria: [value],error
+890, Cancelled by Consumer,error
+891, Cancelled by Merchant,error
+900, No XML message.,error
+901, Invalid XML message. [Value],error
+910," 0 EUR transactions, customer information is stored.",warning
+931, [NodeType] [element] is missing.,error
+932, Too many elements type [element] (max. 1).,error
+933, Value [NodeType] [element] is missing.,error
+934, Value [NodeType] [element] (occurance [occurance]) is missing.,error
+935, Value attribute [attribute] missing element [element].,error
+940, Invalid request: [value].,error
+941, Value field [field] void [value].,error
+942, Attribute value [field] void [value].,error
+943, Credit card type is unknown: [value]. (MasterCard or Visa),error
+944, Invalid card number (Luhn check): [value].,error
+945, Unknown value is invalid: [value].,error
+946, Amount is not a numeric value: [value].,error
+947, Amount invalid: [value].,error
+948, CVC is invalid: [value].,error
+949, Month valid credit card is invalid: [value].,error
+950, Year credit period is invalid: [value].,error
+951, Language unknown or unsupported: [value].,error
+952, The invoice number is missing. This field is required.,error
+953, Blocked by velocity check,error
+954, The transaction ID [value] is already in use.,error
+955, Authentication for this credit card payment is rejected,error
+956, The enrolled status of the card could not be traced.,error
+960, Customer number is invalid: [value].,error
+961, Credit card type not activated [value].,error
+962, Selected currency invalid for Merchant: [value].,error
+963, The transaction ID is invalid: [value],error
+964, There are no payment methods enabled.,error
+971, There is no name specified.,error
+972, There is no address entered.,error
+973, There is no zip code entered.,error
+974, There is no place filled.,error
+975, No country entered.,error
+976, There is no gender entered.,error
+977, Address is invalid,error
+978, The XML link for credit cards is not yet activated.,error
+980, The payment [value] is not activated.,error
+981, The date of the subscription is not a valid date.,error
+982, The subscription has not yet begun.,error
+983, The subscription has expired.,error
+990, The digital signature is incorrect: [value].,error
+991, There is an error occurred while processing the transaction. The Merchant Account Code could not be located.,error
+992, There is error while processing the response. We will fix the problem as quickly as possible.,error
+993, There is an error occurred while processing the transaction.,error
+999, There is an error whose cause is still unknown. We will fix the problem as quickly as possible.,error

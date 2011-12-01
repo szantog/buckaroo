@@ -7,7 +7,7 @@ Name: a random name
 Expiration date: any future date.
 
 
-000 	 The credit card transaction is pending.
+ 000 	 The credit card transaction is pending.
  001 	 The credit card transaction is pending. The MPI status of the customer is checked.
  070 	 The refund is not processed.
  071 	 The refund has been processed successfully.
