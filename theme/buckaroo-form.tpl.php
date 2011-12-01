@@ -9,6 +9,7 @@
 
   <?php if ($method_title) : ?>
     <h3 class="title"><?php print $method_title;?></h3>
+    <?php print render($crm_form) ?>
   <?php endif; ?>
 
   <?php if ($method_title) : ?>

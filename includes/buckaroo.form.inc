@@ -214,6 +214,33 @@ function buckaroo_get_hidden_elements($machine_name) {
       )
     ),
   );
+  if (module_exists('civi_api') && is_numeric($vars['civi_profile'])) {
+    $contact = civi_contact_load(civi_get_contact_id());
+    $elements += array(
+      'crm_contact_id' => array(
+        '#type' => 'hidden',
+        '#value' => !empty($contact->contact_id) ? $contact->contact_id : '',
+        'used' => array (
+          'all'
+        )
+      ),
+      'crm_contact_first_name' => array(
+        '#type' => 'hidden',
+        '#value' => !empty($contact->first_name) ? $contact->first_name : '',
+        'used' => array (
+          'all'
+        )
+      ),
+      'crm_contact_last_name' => array(
+        '#type' => 'hidden',
+        '#value' => !empty($contact->last_name) ? $contact->last_name : '',
+        'used' => array (
+          'all'
+        )
+      ),
+    );
+  }
+
   foreach ($elements as $key => $element) {
     if (in_array($machine_name, $element['used']) || in_array('all', $element['used'])) {
       unset($element['used']);
@@ -221,4 +248,15 @@ function buckaroo_get_hidden_elements($machine_name) {
     }
   }
   return $return;
+}
+
+function buckaroo_crm_form($form_state) {
+  $vars = buckaroo_variable_get();
+  $contact_id = civi_get_contact_id();
+
+  $form['crm'] = array(
+    '#markup' => civi_get_profile_form($contact_id, $vars['civi_profile']),
+  );
+
+  return $form;
 }
