@@ -91,6 +91,29 @@ function buckaroo_admin_form($form_state) {
     );
   }
 
+  if (module_exists('civi_api')) {
+    $form['civicrm'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Civicrm settings'),
+    );
+    $profiles = array('none' => ' - ' . t('Select a Profile') . ' - '); //Initialize array for selector options
+    $profiles += civi_get_all_profiles();
+
+    $form['civicrm']['BPE_civi_profile'] = array(
+      '#type' => 'select',
+      '#title' => t('CiviCRM profile'),
+      '#options' => $profiles,
+      '#default_value' => $vars['civi_profile'],
+    );
+
+    $form['civicrm']['BPE_civi_position'] = array(
+      '#type' => 'select',
+      '#title' => t('Position'),
+      '#options' => array(t('Top'), t('Middle'), t('Bottom')),
+      '#default_value' => $vars['civi_position'],
+    );
+  }
+
   $form['BPE_Mode'] = array(
     '#type' => 'checkbox',
     '#title' => t('Test mode'),

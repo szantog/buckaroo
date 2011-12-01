@@ -128,6 +128,8 @@ function buckaroo_variable_get() {
     'currency' => variable_get('BPE_Currency', 'EUR'),
     'unique_amount' => variable_get('BPE_unique_amount', ''),
     'method_title' => variable_get('BPE_method_title', 'Choose your payment method'),
+    'civi_profile' => variable_get('BPE_civi_profile', 'none'),
+    'civi_position' => variable_get('BPE_civi_position', 0),
     'mode' => variable_get('BPE_Mode', 0),
   );
   $vars += buckaroo_get_payment_methods();
