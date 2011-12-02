@@ -39,6 +39,14 @@ function buckaroo_admin_form($form_state) {
     '#description' => t('The secret key of website.'),
     '#required' => TRUE,
   );
+  $form['basic']['BPE_Description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $vars['description'],
+    '#size' => 60,
+    '#description' => t('Short description will be shown on transaction pages.'),
+    //'#required' => TRUE,
+  );
   $form['basic']['BPE_success_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Success page'),

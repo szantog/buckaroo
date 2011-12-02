@@ -5,6 +5,8 @@ function buckaroo_payment_form($form_state) {
   $values = array();
   $vars = buckaroo_variable_get();
 
+  drupal_add_js(drupal_get_path('module', 'buckaroo') . '/js/buckaroo.js');
+
   foreach ($vars['amount_values'] as $value) {
     $values[$value] = $value . ' ' . $vars['currency'];
   }
@@ -47,6 +49,7 @@ function buckaroo_payment_form($form_state) {
         '#type' => 'item',
         '#title' => $method['name'],
         "{$key}_submit" => array(
+          '#name' => $key,
           '#type' => 'submit',
           '#value' => $method['name'],
           '#attributes' => array(
@@ -54,6 +57,15 @@ function buckaroo_payment_form($form_state) {
           ),
         ),
       );
+//      if ($key == 'cc') {
+//        $form['payment_methods'][$key]["{$key}_submit"]['#ajax'] = array(
+//          'callback' => 'buckaroo_cc_ajax',
+//          'wrapper' => 'ajax-wrapper',
+//          'method' => 'replace',
+//          'effect' => 'fade',
+//        );
+//      };
+
       if (!empty($method['description'])) {
         $form['payment_methods'][$key]['description'] = array(
           '#markup' => $method['description'],
@@ -61,6 +73,14 @@ function buckaroo_payment_form($form_state) {
       }
     }
   }
+// TMP disabled, planned ajax connection
+//  $form['ajax_wrapper'] = array(
+//    '#type' => 'container',
+//    '#weight' => empty($vars['civi_position']) ? 1 : $vars['civi_position'],
+//    '#attributes' => array(
+//      'id' =>'ajax-wrapper',
+//     ),
+//  );
 
   if (module_exists('civi_api') && !empty($vars['civi_profile'])) {
     $contact_id = civi_get_contact_id();
@@ -75,13 +95,26 @@ function buckaroo_payment_form($form_state) {
     );
   }
 
-  $form['#submit'] = array('buckaroo_form_submit');
-
-  dsm(get_defined_vars());
+  //$form['#submit'] = array('buckaroo_payment_form_submit');
+  //dsm(get_defined_vars());
+  $form += buckaroo_get_hidden_elements();
   return $form;
 }
 
-function buckaroo_get_hidden_elements($machine_name) {
+function buckaro_cc_ajax($form, $form_state) {
+  return $form['payment_methods'];
+}
+
+function buckaroo_payment_form_validate($form, &$form_state) {
+  $form_state['values']['value'] = 1;
+}
+
+//function buckaroo_payment_form_submit($form, &$form_state) {
+  //$form_state['values']['value'] = 1;
+  //dsm(get_defined_vars());
+//}
+
+function buckaroo_get_hidden_elements($machine_name = NULL) {
   $vars = buckaroo_variable_get();
   //Look at BPE_Return_Method
   $need_post_method = array('pp', 'ideal');
@@ -122,19 +155,20 @@ function buckaroo_get_hidden_elements($machine_name) {
       )
     ),
     //The code of the preselected bank in this field. If this value is specified, Buckaroo‟s selection creen will not appear. Your customer will be redirected to the bank‟s screen instead.
-    'BPE_Issuer' => array(
-      '#type' => 'hidden',
-      '#value' => '',
-      'used' => array (
-        'ideal'
-      )
-    ),
+    //tmp diabled
+//    'BPE_Issuer' => array(
+//      '#type' => 'hidden',
+//      '#value' => '',
+//      'used' => array (
+//        'ideal'
+//      )
+//    ),
     //short transaction description.
     'BPE_Description' => array(
       '#type' => 'hidden',
-      '#value' => 'need something..',
+      '#value' => $vars['description'],
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //Language code for the user interface language:NL = Dutch EN = English;
@@ -142,7 +176,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' => 'EN',
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //Parameter mode: 0 = full processing 1 = test mode
@@ -158,13 +192,13 @@ function buckaroo_get_hidden_elements($machine_name) {
       '#type' => 'hidden',
       '#value' =>  buckaroo_create_signature($machine_name),
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     //Specify a different URL for the return page for successful payments.
     'BPE_Return_Success' => array(
       '#type' => 'hidden',
-      '#value' => $path,
+      '#value' => $vars['success_path'],
       'used' => array (
         'all'
       )
@@ -172,7 +206,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for payments rejected by PayPal (processor).
     'BPE_Return_Reject' => array(
       '#type' => 'hidden',
-      '#value' => $path,
+      '#value' => $vars['error_path'],
       'used' => array (
         'all'
       )
@@ -180,7 +214,7 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify a different URL for the return page for payments that cannot be processed due to a technical malfunction.
     'BPE_Return_Error' => array(
       '#type' => 'hidden',
-      '#value' => $path,
+      '#value' => $vars['error_path'],
       'used' => array (
         'all'
       )
@@ -188,9 +222,9 @@ function buckaroo_get_hidden_elements($machine_name) {
     //Specify how result parameters should be passed to your response pages:
     'BPE_Return_Method' => array(
       '#type' => 'hidden',
-      '#value' => in_array($machine_name, $need_post_method) ? 'POST' : 'GET',
+      '#value' => 'POST',
       'used' => array (
-        'pp'
+        'all'
       )
     ),
     'BPE_Reference' => array(
@@ -208,32 +242,6 @@ function buckaroo_get_hidden_elements($machine_name) {
       )
     ),
   );
-  if (module_exists('civi_api') && is_numeric($vars['civi_profile'])) {
-    $contact = civi_contact_load(civi_get_contact_id());
-    $elements += array(
-      'crm_contact_id' => array(
-        '#type' => 'hidden',
-        '#value' => !empty($contact->contact_id) ? $contact->contact_id : '',
-        'used' => array (
-          'all'
-        )
-      ),
-      'crm_contact_first_name' => array(
-        '#type' => 'hidden',
-        '#value' => !empty($contact->first_name) ? $contact->first_name : '',
-        'used' => array (
-          'all'
-        )
-      ),
-      'crm_contact_last_name' => array(
-        '#type' => 'hidden',
-        '#value' => !empty($contact->last_name) ? $contact->last_name : '',
-        'used' => array (
-          'all'
-        )
-      ),
-    );
-  }
 
   foreach ($elements as $key => $element) {
     if (in_array($machine_name, $element['used']) || in_array('all', $element['used'])) {
@@ -241,10 +249,7 @@ function buckaroo_get_hidden_elements($machine_name) {
       $return[$key] = $element;
     }
   }
+  dsm(get_defined_vars());
   return $return;
-}
-
-function buckaroo_form_submit($form, &$form_state) {
-  $form_state['redirect'] = 'buckaroo';
 }
 
