@@ -31,10 +31,11 @@ function buckaroo_init() {
       $civi_config = civi_get_config();
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
-        dsm(get_defined_vars());
+
       }
     }
   }
+  dsm(get_defined_vars());
 }
 
 /**
@@ -75,7 +76,7 @@ function buckaroo_menu() {
   if (substr($buckaroo_menu, 0, 4) != 'node') {
     $items[$buckaroo_menu] = array(
       'title' => 'Buckaroo payment page',
-      'page callback' => 'theme',
+      'page callback' => 'drupal_get_form',
       'page arguments' => array('buckaroo_payment_form'),
       'access arguments' => array('access buckaroo'),
       'file' => 'includes/buckaroo.form.inc',
@@ -103,25 +104,38 @@ function buckaroo_form_buckaroo_admin_form_alter(&$form, &$form_state) {
 
 /**
  * Get all payment methods, it's names and it's enabled or not
+ * @todo: make this configurable
  * @return array
  *   And array of predefined payment methods
  */
 function buckaroo_get_payment_methods() {
+  $defaults = &drupal_static(__FUNCTION__);
+
+  if (isset($defaults)) {
+    return $defaults;
+  }
+
   $defaults = array(
     'cc' => array(
       'name'=> 'Credit cards',
+      'description' => t('You will be redirected to a Credit Card placeholder to complete the payment.'),
+      'action' => 'https://payment.buckaroo.nl/sslplus/request_for_authorization.asp',
      ),
     'ideal' => array(
-      'name'=> 'iDEAL',
+      'name'=> t('iDEAL'),
+      'description' => t('You will be redirected to the iDEAL system to complete the payment.'),
+      'action' => 'https://payment.buckaroo.nl/gateway/ideal_payment.asp',
      ),
     'gp' => array(
-      'name'=> 'Giropay',
+      'name'=> t('Giropay'),
      ),
     'pp' => array(
-      'name'=> 'PayPal',
+      'name'=> t('PayPal'),
+      'description' => t('Pay using your PayPal account. You will be redirected to the PayPal system to complete the payment.'),
+      'action' => 'https://payment.buckaroo.nl/gateway/paypal_payment.asp',
      ),
     'oodb' => array(
-      'name'=> 'Once-only and continuous direct debits',
+      'name'=> t('Once-only and continuous direct debits'),
      ),
    );
   foreach ($defaults as $key => &$value) {
@@ -149,53 +163,13 @@ function buckaroo_variable_get() {
     'currency' => variable_get('BPE_Currency', 'EUR'),
     'unique_amount' => variable_get('BPE_unique_amount', ''),
     'method_title' => variable_get('BPE_method_title', 'Choose your payment method'),
+    'civi_title' => variable_get('BPE_civi_title', 'Enter your details'),
     'civi_profile' => variable_get('BPE_civi_profile', 'none'),
     'civi_position' => variable_get('BPE_civi_position', 0),
     'mode' => variable_get('BPE_Mode', 0),
   );
   $vars += buckaroo_get_payment_methods();
   return $vars;
-}
-
-/**
- * Implements hook_theme
- * @param type $existing
- * @param type $type
- * @param type $theme
- * @param type $path
- * @return type
- */
-function buckaroo_theme($existing, $type, $theme, $path) {
-  if($type == 'module') {
-    return array(
-      'buckaroo_payment_form' => array(
-        'template' => 'buckaroo-form',
-        'path' => drupal_get_path('module', 'buckaroo') . '/theme',
-      ),
-    );
-  }
-  return array(); //will raise fatal error if void
-}
-
-/**
- * Preprocess function to create variables for buckaroo-form.tpl.php
- * @param array $vars
- *
- */
-function buckaroo_preprocess_buckaroo_payment_form(&$vars) {
-  module_load_include('inc', 'buckaroo', 'includes/buckaroo.form');
-  $methods = buckaroo_get_payment_methods() ;
-  $vars += buckaroo_variable_get();
-  $vars += array(
-    'amount_form' => drupal_get_form('buckaroo_amount_form'),
-  );
-
-  foreach ($methods as $key => $method) {
-    if ($method['enabled'] && function_exists("buckaroo_{$key}_form")) {
-      $vars['method_forms'][$key] = drupal_get_form("buckaroo_{$key}_form");
-    }
-  }
-  $vars += array('crm_form' => drupal_get_form('buckaroo_crm_form'));
 }
 
 function buckaroo_create_signature($machine_name) {

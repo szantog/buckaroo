@@ -97,8 +97,16 @@ function buckaroo_admin_form($form_state) {
       '#title' => t('Civicrm settings'),
     );
     $profiles = array('none' => ' - ' . t('Select a Profile') . ' - '); //Initialize array for selector options
-    $profiles += civi_get_all_profiles();
+    $profiles += civi_get_profiles();
 
+    $form['civicrm']['BPE_civi_title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title of Civicrm profile'),
+      '#default_value' => $vars['civi_title'],
+      '#size' => 60,
+      '#description' => t('Specify a the title of CiviCRM profile form.'),
+    );
+    
     $form['civicrm']['BPE_civi_profile'] = array(
       '#type' => 'select',
       '#title' => t('CiviCRM profile'),
