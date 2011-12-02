@@ -39,6 +39,22 @@ function buckaroo_admin_form($form_state) {
     '#description' => t('The secret key of website.'),
     '#required' => TRUE,
   );
+  $form['basic']['BPE_success_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Success page'),
+    '#default_value' => $vars['success_path'],
+    '#size' => 40,
+    '#description' => t('Specify a relative URL to redirect after payment is successful.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+  );
+  $form['basic']['BPE_error_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Error page'),
+    '#default_value' => $vars['error_path'],
+    '#size' => 40,
+    '#description' => t('Specify a relative URL to redirect after payment is failed.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+  );
 
   $form['amount'] = array(
     '#type' => 'fieldset',
@@ -106,7 +122,7 @@ function buckaroo_admin_form($form_state) {
       '#size' => 60,
       '#description' => t('Specify a the title of CiviCRM profile form.'),
     );
-    
+
     $form['civicrm']['BPE_civi_profile'] = array(
       '#type' => 'select',
       '#title' => t('CiviCRM profile'),
