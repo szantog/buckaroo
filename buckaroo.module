@@ -26,9 +26,17 @@ function buckaroo_init() {
       }
       drupal_set_message($error_codes[$post['bpe_result']]['message'], $status);
     }
+    // CiviCRM integration
+    if (module_exists('civi_api')) {
+      $civi_config = civi_get_config();
+      //Check if CiviContribute is enabled
+      if (in_array('CiviContribute', $civi_config->enableComponents)) {
+        dsm(get_defined_vars());
+      }
+    }
   }
-  dsm(get_defined_vars());
 }
+
 /**
  * Implements of hook_perm().
  *
@@ -234,7 +242,7 @@ function buckaroo_xmlrpc($form, $form_state) {
 
 /**
  * Helper function to read statuscodes.csv
- *
+ * @todo: make the messages trasnlatable
  * @return array
  */
 function _buckaroo_get_error_codes() {
@@ -252,15 +260,4 @@ function _buckaroo_get_error_codes() {
       $data[$prepareData['status_code']] = $prepareData;
   }
   return $data;
-}
-
-/**
- * Parse
- *
- * @param type $input
- * @param type $delimiter
- * @return type
- */
-function _buckaroo_csv_to_array($input, $delimiter=',') {
-
 }
