@@ -99,7 +99,7 @@ function buckaroo_admin_form($form_state) {
     '#type' => 'fieldset',
     '#title' => t('Enabled payment methods'),
   );
-  $form['method']['buckaroo_method_title'] = array(
+  $form['method']['BPE_method_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title of payment method section'),
     '#default_value' => $vars['method_title'],
