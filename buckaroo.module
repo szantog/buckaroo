@@ -164,8 +164,8 @@ function buckaroo_variable_get() {
   global $base_url;
   $vars = array(
     'path' => variable_get('BPE_path', 'buckaroo'),
-    'success_path' => $base_url . '/' . variable_get('BPE_success_path', ''),
-    'error_path' => $base_url . '/' . variable_get('BPE_error_path', ''),
+    'success_path' => variable_get('BPE_success_path', ''),
+    'error_path' => variable_get('BPE_error_path', ''),
     'merchant_key' => variable_get('BPE_Merchant', ''),
     'secret_key' => variable_get('BPE_SecretKey', ''),
     'description' => variable_get('BPE_Description', ''),
