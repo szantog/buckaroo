@@ -33,6 +33,13 @@ function buckaroo_confirm_form($form_state) {
     '#type' => 'submit',
     '#value' => t('Submit'),
   );
+
+  if (module_exists('civi_api')) {
+    $form['email'] = array(
+      '#type' => 'hidden',
+      '#value' => $_GET['email-Primary'],
+    );
+  }
   $form += buckaroo_get_hidden_elements($payment_method_key);
 
   $form['#action'] = $payment_method['action'];
