@@ -24,7 +24,7 @@ function buckaroo_confirm_form($form_state) {
 
   $form['amount'] = array (
     '#type' => 'item',
-    '#markup' => $_GET['value'],
+    '#markup' => is_numeric($_GET['uniqueamount']) ? $_GET['uniqueamount'] : $_GET['value'],
     '#title' => t('Amount') . ': ',
     '#field_suffix' => $vars['currency'],
   );
@@ -69,7 +69,7 @@ function buckaroo_get_hidden_elements($machine_name = NULL) {
     //The transaction amount in cents. *
     'BPE_Amount' => array(
       '#type' => 'hidden',
-      '#value' => $_GET['value'] * 100,
+      '#value' => is_numeric($_GET['uniqueamount']) ? $_GET['uniqueamount'] * 100 : $_GET['value'] * 100,
       'used' => array (
         'all'
       )
