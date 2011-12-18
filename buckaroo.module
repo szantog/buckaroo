@@ -35,7 +35,7 @@ function buckaroo_init() {
       }
     }
   }
-  //dsm(get_defined_vars());
+  dsm(get_defined_vars());
 }
 
 /**
@@ -69,6 +69,17 @@ function buckaroo_menu() {
     'page arguments' => array('buckaroo_admin_form'),
     'access arguments' => array('administer buckaroo'),
     'file' => 'includes/buckaroo.admin.inc',
+  );
+
+  //Because of buckaroo system never enable to pass parameters without form action. Therefore always need a drupal
+  //confirmation page to prevent skipping drupal form validation.
+  $items['buckaroo/confirm'] = array(
+    'title' => 'Confirm',
+    'description' => 'Confirmation page before post  to buckaroo',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('buckaroo_confirm_form'),
+    'access arguments' => array('access buckaroo'),
+    'file' => 'includes/buckaroo.confirm.inc',
   );
 
   $buckaroo_menu = variable_get('BPE_path', 'buckaroo');
@@ -195,36 +206,6 @@ function buckaroo_create_signature($machine_name) {
 function buckaroo_create_invoice() {
   $invoice = &drupal_static(__FUNCTION__, "panparks-" . time());
   return $invoice;
-}
-
-function buckaroo_xmlrpc($form, $form_state) {
-  // First define the endpoint of the XML-RPC service, in this case is our
-  // own server.
-  $server = url('https://payment.buckaroo.nl/xml/request_for_authorization_mpi.asp', array('external' => TRUE));
-  // Then we should define the method to call. xmlrpc() requires that all the
-  // information related to the called method is passed as an array in the form
-  // of 'method_name' => arguments_array
-  $options = array(
-    'xmlrpc_example.add' => array(
-      (int) $form_state['values']['num1'],
-      (int) $form_state['values']['num2'],
-    ),
-  );
-  // Make the xmlrpc request and process the results.
-  $result = xmlrpc($server, $options);
-  if ($result === FALSE) {
-    drupal_set_message(
-      t('Error return from xmlrpc(): Error: @errno, Message: @message',
-      array('@errno' => xmlrpc_errno(), '@message' => xmlrpc_error_msg())),
-      'error'
-    );
-  }
-  else {
-    drupal_set_message(
-      t('The XML-RPC server returned this response: @response',
-      array('@response' => print_r($result, TRUE)))
-    );
-  }
 }
 
 /**
