@@ -27,15 +27,23 @@ function buckaroo_init() {
       drupal_set_message($error_codes[$post['bpe_result']]['message'], $status);
     }
     // CiviCRM integration
-    if (module_exists('civi_api')) {
+    if (module_exists('civi_api') && $status == 'success') {
       $civi_config = civi_get_config();
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
-
+        $contact = civi_api('contact', 'get', array('email' => $_POST['email']));
+        $types = civi_get_contribution_types();
+        if (!$contact['is_error']) {
+          $contribution = new stdClass();
+          $contribution->total_amount = $post['bpe_amount'] / 100;
+          $contribution->contact_id = $contact['id'];
+          $contribution->contribution_status_id = 1;
+          $contribution->contribution_type_id = 1;
+          civi_contribution_save($contribution);
+        }
       }
     }
   }
-  dsm(get_defined_vars());
 }
 
 /**
@@ -198,7 +206,7 @@ function buckaroo_variable_get() {
 
 function buckaroo_create_signature($machine_name) {
   $vars = buckaroo_variable_get();
-  $ammount = isset($_GET['default_amount']) ? $_GET['default_amount'] * 100 : $vars['amount_values'][0] * 100;
+  $ammount = isset($_GET['value']) ? $_GET['value'] * 100 : $vars['amount_values'][0] * 100;
   $string = $vars['merchant_key'] . buckaroo_create_invoice() .$ammount . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
   return md5($string);
 }
@@ -214,18 +222,20 @@ function buckaroo_create_invoice() {
  * @return array
  */
 function _buckaroo_get_error_codes() {
+  global $base_url;
   $file = drupal_get_path('module', 'buckaroo') . '/statuscodes.csv';
 
   $header = array('status_code', 'message', 'error_level');;
   $data = array();
-  $csvData = str_getcsv($file, "\n");
+  $csvData = str_getcsv(file_get_contents($file), "\n");
 
   foreach ($csvData as $csvLine) {
-      $items = explode(';', $csvLine);
+      $items = explode(',', $csvLine);
       for ($n = 0, $m = count($header); $n < $m; $n++) {
         $prepareData[$header[$n]] = $items[$n];
       }
       $data[$prepareData['status_code']] = $prepareData;
   }
+
   return $data;
 }
