@@ -233,7 +233,7 @@ function _buckaroo_get_error_codes() {
 
   $header = array('status_code', 'message', 'error_level');;
   $data = array();
-  $csvData = str_getcsv(file_get_contents($file), "\n");
+  //$csvData = str_getcsv(file_get_contents($file), "\n");
 
   foreach ($csvData as $csvLine) {
       $items = explode(',', $csvLine);
