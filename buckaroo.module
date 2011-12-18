@@ -14,7 +14,12 @@
  * Implementation of hook_init().
  */
 function buckaroo_init() {
+  //The buckaroo send data back via post or get method based on payment method. We need to figure out, in which
+  //way get data;
   $post = $GLOBALS['_POST'];
+  if (empty($post['bpe_result'])) {
+    $post = $GLOBALS['_GET'];
+  }
 
   if (!empty($post['bpe_result'])) {
     $error_codes = _buckaroo_get_error_codes();
