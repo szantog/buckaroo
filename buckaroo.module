@@ -32,7 +32,7 @@ function buckaroo_init() {
       drupal_set_message($error_codes[$post['bpe_result']]['message'], $status);
     }
     // CiviCRM integration
-    if (module_exists('civi_api') && $status == 'success') {
+    if (module_exists('civi_api') && $status == 'status') {
       $civi_config = civi_get_config();
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
@@ -49,6 +49,7 @@ function buckaroo_init() {
       }
     }
   }
+  //dsm(get_defined_vars());
 }
 
 /**
