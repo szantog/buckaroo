@@ -78,7 +78,6 @@ function buckaroo_payment_form($form_state) {
     if ($user->uid > 0) {
       $options = array(
         'process' => TRUE,
-        'action' => 2,
       );
     }
     else {
