@@ -99,7 +99,7 @@ function buckaroo_payment_form($form_state) {
     );
   }
 
-  dsm(get_defined_vars());
+  //dsm(get_defined_vars());
   return $form;
 }
 
