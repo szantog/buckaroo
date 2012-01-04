@@ -137,6 +137,48 @@ function buckaroo_form_buckaroo_admin_form_alter(&$form, &$form_state) {
 }
 
 /**
+ * Implements hook_requirements
+ */
+function buckaroo_requirements($phase) {
+  $requirements = array();
+  $vars = buckaroo_variable_get();
+
+  if ($phase == 'runtime') {
+    // Report if civi_api moduled is disabled when civiprofile is turned on.
+    if (!module_exists('civi_api') && !empty($vars['civi_profile'])) {
+      $requirements['buckaroo_civiapi'] = array(
+        'title' => t('Buckaroo'),
+        'value' => t('The civicrm support for Buckaroo gateway is turned on, but the module civi_api is not enabled!'),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    else {
+      $requirements['buckaroo_civiapi'] = array(
+        'title' => t('Buckaroo civi_api'),
+        'value' => t('The civi_api module is enabled for Buckaroo.'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+    // Report if civicrm moduled is disabled when civiprofile is turned on.
+    if (!module_exists('civicrm') && !empty($vars['civi_profile'])) {
+      $requirements['buckaroo_civicrm'] = array(
+        'title' => t('Buckaroo'),
+        'value' => t('The civicrm support for Buckaroo gateway is turned on, but the module civicrm is not enabled!'),
+        'severity' => REQUIREMENT_ERROR,
+      );
+    }
+    else {
+      $requirements['buckaroo_civicrm'] = array(
+        'title' => t('Buckaroo civicrm'),
+        'value' => t('The civicrm module is enabled for Buckaroo.'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+  }
+  return $requirements;
+}
+
+/**
  * Get all payment methods, it's names and it's enabled or not
  * @todo: make this configurable
  * @return array
