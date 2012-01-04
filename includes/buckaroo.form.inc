@@ -104,39 +104,35 @@ function buckaroo_payment_form($form_state) {
 
 function buckaroo_payment_form_validate($form, &$form_state) {
   $valid = &drupal_static(__FUNCTION__);
+  $vars = buckaroo_variable_get();
   if (isset($valid)) {
     return ;
   }
   $valid = TRUE;
 
-  // lets suppress key generation for all validation also
-  civicrm_key_disable();
+  if (module_exists('civi_api') && !empty($vars['civi_profile'])) {
+    $uid = civi_get_contact_id($form['#user']->uid);
+    require_once 'CRM/Core/BAO/UFGroup.php';
 
-  require_once 'CRM/Utils/Array.php';
-  require_once 'CRM/Core/BAO/UFMatch.php';
-  require_once 'CRM/Core/BAO/UFGroup.php';
+    $uid = civi_get_contact_id($form['#user']->uid);
 
-  $uid = civi_get_contact_id($form['#user']->uid);
+    // The main CiviCRM form validate process.
+    $errors = CRM_Core_BAO_UFGroup::isValid($uid, '', TRUE);
 
-  // The main CiviCRM form validate process.
-  $errors = CRM_Core_BAO_UFGroup::isValid($uid, '', TRUE);
+    if (is_array($errors)) {
+      foreach ($errors as $name => $error) {
+        form_set_error($name);
+      }
+    }
 
-  if (is_array($errors)) {
-    foreach ($errors as $name => $error) {
-      form_set_error($name);
+    // Because of civicrm validation bug, civicrm doesn't pass email-Primary error into $errors array
+    if (isset($form_state['input']['email-Primary']) && !civi_valid_email_address($form_state['input']['email-Primary'])) {
+      form_set_error('email-Primary');
     }
   }
-
-  // Because of civicrm validation bug, civicrm doesn't pass email-Primary error into $errors array
-  if (isset($form_state['input']['email-Primary']) && !valid_email_address($form_state['input']['email-Primary'])) {
-    form_set_error('email-Primary');
-  }
-
 //  @todo let's start to build a drupal user??
 //  $account = $form['#user'];
 //  entity_form_submit_build_entity('user', $account, $form, $form_state);
-
-//  return true;
 }
 
 function buckaroo_payment_form_submit($form, &$form_state) {
