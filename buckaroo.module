@@ -48,6 +48,7 @@ function buckaroo_init() {
         }
       }
     }
+    dsm(get_defined_vars());
   }
 }
 
