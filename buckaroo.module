@@ -22,7 +22,8 @@ function buckaroo_init() {
   }
 
   if (!empty($post['bpe_result'])) {
-    $error_codes = _buckaroo_get_error_codes();
+    module_load_include('inc', 'buckaroo', 'includes/buckaroo.error');
+    $error_codes = buckaroo_error_codes();
     if ($error_codes[$post['bpe_result']]) {
       $status = $error_codes[$post['bpe_result']]['error_level'];
       //Change 'success' to drupal_set_message default status
@@ -262,45 +263,4 @@ function buckaroo_create_signature($machine_name) {
 function buckaroo_create_invoice() {
   $invoice = &drupal_static(__FUNCTION__, "panparks-" . time());
   return $invoice;
-}
-
-/**
- * Helper function to read statuscodes.csv
- * @todo: make the messages trasnlatable
- * @return array
- */
-function _buckaroo_get_error_codes() {
-  global $base_url;
-  $file = drupal_get_path('module', 'buckaroo') . '/statuscodes.csv';
-
-  $header = array('status_code', 'message', 'error_level');;
-  $data = array();
-  $csvData = str_getcsv(file_get_contents($file), "\n");
-
-  foreach ($csvData as $csvLine) {
-      $items = explode(',', $csvLine);
-      for ($n = 0, $m = count($header); $n < $m; $n++) {
-        $prepareData[$header[$n]] = $items[$n];
-      }
-      $data[$prepareData['status_code']] = $prepareData;
-  }
-
-  return $data;
-}
-
-/**
- * Emulate str_getcsv if php version < 5.3
- */
-if (!function_exists('str_getcsv')) {
-  function str_getcsv($input, $delimiter = ",", $enclosure = '"', $escape = "\\") {
-    $fiveMBs = 5 * 1024 * 1024;
-    $fp = fopen("php://temp/maxmemory:$fiveMBs", 'r+');
-    fputs($fp, $input);
-    rewind($fp);
-
-    $data = fgetcsv($fp, 1000, $delimiter, $enclosure); //  $escape only got added in 5.3.0
-
-    fclose($fp);
-    return $data;
-  }
 }
