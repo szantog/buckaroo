@@ -37,12 +37,12 @@ function buckaroo_init() {
       $civi_config = civi_get_config();
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
-        $contact = civi_api('contact', 'get', array('email' => $post['email']));
-        $types = civi_get_contribution_types();
-        if (!$contact['is_error']) {
+        if ($contacts = civi_contact_load_by_email($post['email'])) {
+          foreach ($contacts as $contact) {}
+          $types = civi_get_contribution_types();
           $contribution = new stdClass();
           $contribution->total_amount = $post['bpe_amount'] / 100;
-          $contribution->contact_id = $contact['id'];
+          $contribution->contact_id = $contact->id;
           $contribution->contribution_status_id = 1;
           $contribution->contribution_type_id = 1;
           civi_contribution_save($contribution);
