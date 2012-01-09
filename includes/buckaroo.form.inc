@@ -87,7 +87,6 @@ function buckaroo_payment_form($form_state) {
       );
     }
 
-
     $form['crm'] = array(
       '#prefix' => !empty($vars['civi_title']) ? "<h3>{$vars['civi_title']}</h3>" : NULL,
       '#markup' => civi_get_profile_form($contact_id, $vars['civi_profile'], $options),
@@ -116,7 +115,7 @@ function buckaroo_payment_form_validate($form, &$form_state) {
 
     $uid = civi_get_contact_id($form['#user']->uid);
 
-    // The main CiviCRM form validate process.
+    // The main CiviCRM user form validate process.
     $errors = CRM_Core_BAO_UFGroup::isValid($uid, '', TRUE);
 
     if (is_array($errors)) {
@@ -136,5 +135,9 @@ function buckaroo_payment_form_validate($form, &$form_state) {
 }
 
 function buckaroo_payment_form_submit($form, &$form_state) {
+//  $vars = buckaroo_variable_get();
+//  if (module_exists('civi_api') && !empty($vars['civi_profile'])) {
+//    $contact = civi_contact_load_by_email($form_state['input']['email-Primary']);
+//  }
   $form_state['redirect'] = url('buckaroo/confirm', array('absolute' => TRUE, 'query' => array($form_state['input'])));
 }
