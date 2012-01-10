@@ -79,7 +79,6 @@ function buckaroo_payment_form($form_state) {
     $form['#user'] = $user;
     $form_state['user'] = $user;
     civicrm_key_disable( );
-    //$form['#attributes']['enctype'] = 'multipart/form-data';
 
     if ($user->uid > 0) {
       $options = array(
@@ -103,6 +102,7 @@ function buckaroo_payment_form($form_state) {
     );
   }
 
+  $form += buckaroo_get_hidden_elements();
   //dsm(get_defined_vars());
   return $form;
 }
