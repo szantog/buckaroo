@@ -15,8 +15,9 @@ var Buckaroo = {};
     attach: function (context, settings) {
 
       var BPE_Amount = $('input[name=BPE_Amount]');
+      // The amount of payment transfer to Buckaroo
+      var amount = $('#edit-amount :radio:first', BuckarooContext).val();
 
-      BPE_Amount.val($('#edit-amount :radio:first', BuckarooContext).val() * 100);
 
       // Remove checked, if uniqueamont field get focus.
       $('#edit-uniqueamount', BuckarooContext).focus (function () {
@@ -30,15 +31,14 @@ var Buckaroo = {};
           $('#edit-amount :radio:first', BuckarooContext).attr('checked', true);
         }
         else {
-          BPE_Amount.val($(this).val() * 100);
+          amount = $(this).val();
         }
       })
 
       // If a radio is clicked, remove the uniqeamount value, and set BPE_value
       $('#edit-amount :radio', BuckarooContext).click (function () {
         $('#edit-uniqueamount', BuckarooContext).val('');
-        ammount = $(this).val();
-        BPE_Amount.val($(this).val() * 100);
+        amount = $(this).val();
       })
 
       // Disable the non-numeric characters.
@@ -70,7 +70,8 @@ var Buckaroo = {};
         eval('var FormAction = settings.Buckaroo.' + name + '.action;');
 
         if (Buckaroo.valid()) {
-          //BuckarooForm.Prepare();
+          BPE_Amount.val(amount * 100);
+          $('input[name=BPE_Signature2]', context).val(BuckarooGetSignature());
           $('#buckaroo-payment-form').attr("action", FormAction);
           //e.preventDefault();
         }
@@ -79,10 +80,12 @@ var Buckaroo = {};
         }
       })
 
-      BuckarooForm.Prepare = function() {
-        $('input[type!="hidden"]', BuckarooContext).each(function(){
-          var html = $('<input type="hidden" value="' + $(this).val() + '" name="' + $(this).attr('name') + '">');
-          $('#buckaroo-payment-form div:first').prepend(html);
+      // Get new signature value based on new amount
+      BuckarooGetSignature = function() {
+        var url = '/buckaroo/get-signature?BPE_Amount=' + amount + '&BPE_Invoicee=' + $('input[name=BPE_Invoice]', context).val();
+        var params = {format: 'json'};
+        $.getJSON(url, params, function(json) {
+          return json;
         });
       }
     }
@@ -99,13 +102,5 @@ var Buckaroo = {};
       return true;
     }
   }
-
-//  Buckaroo.error = function(id) {
-//    var parent = $(id).parents(".form-item");
-//    var label = $("label:not(label>span)", parent).text();
-//    $(parent).append('<div class="error">' + Drupal.t(label + 'field is required.') + '</div>');
-//    $(parent).show();
-//    return;
-//  }
 
 }(jQuery));
