@@ -20,7 +20,7 @@ function buckaroo_init() {
   if (empty($post['bpe_result'])) {
     $post = $GLOBALS['_GET'];
   }
-
+  $test = url('test', array('query' => $post));
   if (!empty($post['bpe_result'])) {
     module_load_include('inc', 'buckaroo', 'includes/buckaroo.error');
     $error_codes = buckaroo_error_codes();
@@ -45,6 +45,7 @@ function buckaroo_init() {
           $contribution->contact_id = $contact->id;
           $contribution->contribution_status_id = 1;
           $contribution->contribution_type_id = 1;
+          $contribution->source = 'Buckaroo payment form';
           civi_contribution_save($contribution);
         }
       }
@@ -265,16 +266,18 @@ function buckaroo_create_invoice() {
   return $invoice;
 }
 
+/**
+ * Get settings for Drupal.settings js.
+ * 
+ * @return
+ *  an array of settings
+ */
 function _buckaroo_js_settings() {
-
-  $settings = array();
-  $payment_methods = buckaroo_get_payment_methods();
-
-  foreach ($payment_methods as $key => $value) {
-    if (!$value['enabled']) {
+  $settings = buckaroo_get_payment_methods();
+  foreach ($settings as $key => $value) {
+    if ($value['enabled'] != 1) {
       unset($settings[$key]);
     }
   }
-  //drupal_add_js($settings, 'setting');
   return $settings;
 }
