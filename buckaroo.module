@@ -98,6 +98,13 @@ function buckaroo_menu() {
     'file' => 'includes/buckaroo.confirm.inc',
   );
 
+  $items['buckaroo/get-signature'] = array(
+    'title' => 'Confirm',
+    'page callback' => 'buckaroo_get_signature',
+    'access arguments' => array('access buckaroo'),
+    'type' => MENU_CALLBACK,
+  );
+
   $buckaroo_menu = variable_get('BPE_path', 'buckaroo');
 
   if (substr($buckaroo_menu, 0, 4) != 'node') {
@@ -254,10 +261,15 @@ function buckaroo_variable_get() {
   return $vars;
 }
 
-function buckaroo_create_signature($machine_name) {
+function buckaroo_get_signature() {
+  drupal_json_output(buckaroo_create_signature());
+}
+
+function buckaroo_create_signature() {
   $vars = buckaroo_variable_get();
-  $ammount = isset($_GET['value']) ? $_GET['value'] * 100 : $vars['amount_values'][0] * 100;
-  $string = $vars['merchant_key'] . buckaroo_create_invoice() .$ammount . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
+  $amount = isset($_GET['BPE_Amount']) ? $_GET['BPE_Amount'] * 100 : $vars['amount_values'][0] * 100;
+  $invoice = isset($_GET['BPE_Invoice']) ? $_GET['BPE_Invoice'] : buckaroo_create_invoice();
+  $string = $vars['merchant_key'] . $invoice . $amount . $vars['currency'] . $vars['mode'] . $vars['secret_key'];
   return md5($string);
 }
 
