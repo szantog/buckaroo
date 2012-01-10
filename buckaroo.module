@@ -264,3 +264,17 @@ function buckaroo_create_invoice() {
   $invoice = &drupal_static(__FUNCTION__, "panparks-" . time());
   return $invoice;
 }
+
+function _buckaroo_js_settings() {
+
+  $settings = array();
+  $payment_methods = buckaroo_get_payment_methods();
+
+  foreach ($payment_methods as $key => $value) {
+    if (!$value['enabled']) {
+      unset($settings[$key]);
+    }
+  }
+  //drupal_add_js($settings, 'setting');
+  return $settings;
+}
