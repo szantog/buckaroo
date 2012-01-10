@@ -37,7 +37,7 @@ function buckaroo_init() {
       $civi_config = civi_get_config();
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
-        if ($contacts = civi_contact_load_by_email($post['email'])) {
+        if ($contacts = civi_contact_load_by_email($post['email-Primary'])) {
           foreach ($contacts as $contact) {}
           $types = civi_get_contribution_types();
           $contribution = new stdClass();
@@ -50,7 +50,7 @@ function buckaroo_init() {
         }
       }
     }
-    dsm(get_defined_vars());
+    //dsm(get_defined_vars());
   }
 }
 
