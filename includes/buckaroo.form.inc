@@ -5,7 +5,13 @@ function buckaroo_payment_form($form_state) {
   $values = array();
   $vars = buckaroo_variable_get();
 
-  drupal_add_js(drupal_get_path('module', 'buckaroo') . '/js/buckaroo.js');
+
+  $form['#attached']['js'][] = drupal_get_path('module', 'buckaroo') . '/js/buckaroo.js';
+
+  $form['#attached']['js'][] = array(
+    'data' => array('Buckaroo' => _buckaroo_js_settings()),
+    'type' => 'setting',
+  );
 
   foreach ($vars['amount_values'] as $value) {
     $values[$value] = $value . ' ' . $vars['currency'];
@@ -135,9 +141,7 @@ function buckaroo_payment_form_validate($form, &$form_state) {
 }
 
 function buckaroo_payment_form_submit($form, &$form_state) {
-//  $vars = buckaroo_variable_get();
-//  if (module_exists('civi_api') && !empty($vars['civi_profile'])) {
-//    $contact = civi_contact_load_by_email($form_state['input']['email-Primary']);
-//  }
+  // If no javascript enabled, we must redirect to confirm page, before submit
+  // to Buckaroo
   $form_state['redirect'] = url('buckaroo/confirm', array('absolute' => TRUE, 'query' => array($form_state['input'])));
 }
