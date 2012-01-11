@@ -35,10 +35,16 @@ function buckaroo_init() {
     // CiviCRM integration
     if (module_exists('civi_api') && $status == 'status') {
       $civi_config = civi_get_config();
+      if ($contacts = civi_contact_load_by_email($post['email-Primary'])) {
+        $contactsas = current($contact);
+      }
+      else {
+        $contact = new stdClass();
+        $contact->email = $post['email-Primary'];
+      }
+
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
-        if ($contacts = civi_contact_load_by_email($post['email-Primary'])) {
-          foreach ($contacts as $contact) {}
           $types = civi_get_contribution_types();
           $contribution = new stdClass();
           $contribution->total_amount = $post['bpe_amount'] / 100;
@@ -47,11 +53,10 @@ function buckaroo_init() {
           $contribution->contribution_type_id = 1;
           $contribution->source = 'Buckaroo payment form';
           civi_contribution_save($contribution);
-        }
       }
     }
-    //dsm(get_defined_vars());
   }
+  dsm(get_defined_vars());
 }
 
 /**

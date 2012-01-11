@@ -11,6 +11,7 @@ var Buckaroo = {};
   var WrongKey = false;
 
 
+
   Drupal.behaviors.buckaroo = {
     attach: function (context, settings) {
 
@@ -18,7 +19,37 @@ var Buckaroo = {};
       // The amount of payment transfer to Buckaroo
       var amount = $('#edit-amount :radio:first', BuckarooContext).val();
 
+      // Get new signature value based on new amount
+      Buckaroo.GetSignature = function() {
+        var url = '/buckaroo/get-signature?BPE_Amount=' + amount + '&BPE_Invoice=' + $('input[name=BPE_Invoice]', context).val();
+        var params = {format: 'json'};
+        var data = null;
 
+        $.ajax({
+          url: '/buckaroo/get-signature?BPE_Amount=' + amount + '&BPE_Invoice=' + $('input[name=BPE_Invoice]', context).val(),
+          async: false,
+          data: {BPE_Amount: amount, BPE_Invoice: $('input[name=BPE_Invoice]', context).val()},
+          dataType: 'json',
+          success: function (json) {
+            data = json;
+            data = json;
+          }
+        });
+        return data;
+      };
+
+      Buckaroo.valid = function() {
+        var error = false;
+        $("#buckaroo-payment-form .required").each(function() {
+          if ($(this).val() == '') {
+            error = true;
+          }
+        });
+        if (!error) {
+          return true;
+        }
+      };
+      
       // Remove checked, if uniqueamont field get focus.
       $('#edit-uniqueamount', BuckarooContext).focus (function () {
         $('#edit-amount :radio', BuckarooContext).attr('checked', false);
@@ -71,36 +102,16 @@ var Buckaroo = {};
 
         if (Buckaroo.valid()) {
           BPE_Amount.val(amount * 100);
-          $('input[name=BPE_Signature2]', context).val(BuckarooGetSignature());
+          var sign = Buckaroo.GetSignature();
+          $('input[name=BPE_Signature2]', context).val(sign);
           $('#buckaroo-payment-form').attr("action", FormAction);
           //e.preventDefault();
         }
+
         else {
           e.preventDefault();
         }
       })
-
-      // Get new signature value based on new amount
-      BuckarooGetSignature = function() {
-        var url = '/buckaroo/get-signature?BPE_Amount=' + amount + '&BPE_Invoicee=' + $('input[name=BPE_Invoice]', context).val();
-        var params = {format: 'json'};
-        $.getJSON(url, params, function(json) {
-          return json;
-        });
-      }
     }
   };
-
-  Buckaroo.valid = function() {
-    var error = false;
-    $("#buckaroo-payment-form .required").each(function() {
-      if ($(this).val() == '') {
-        error = true;
-      }
-    });
-    if (!error) {
-      return true;
-    }
-  }
-
 }(jQuery));
