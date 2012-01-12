@@ -78,7 +78,7 @@ function buckaroo_admin_form($form_state) {
   $form['amount']['BPE_amount_values'] = array(
     '#title' => t('Amount values'),
     '#type' => 'textarea',
-    '#description' => t('Need some text'),
+    '#description' => t('The comma separated list of values selectable amount. The default value of options is the first by default. If you want to choose another, put before it a *'),
     '#default_value' => drupal_implode_tags($vars['amount_values']),
   );
   $form['amount']['BPE_amount_curr'] = array(
