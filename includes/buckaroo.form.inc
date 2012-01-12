@@ -138,6 +138,11 @@ function buckaroo_payment_form_validate($form, &$form_state) {
     if (isset($form_state['input']['email-Primary']) && !civi_valid_email_address($form_state['input']['email-Primary'])) {
       form_set_error('email-Primary');
     }
+    if (!empty($vars['minimum']) && $form_state['values']['unique_amount'] < $vars['minimum']) {
+      form_set_error('unique_amount',
+        t('The amount should be greater, than %minimum.',
+          array('%minimum' => $vars['minimum'])));
+    }
   }
 //  @todo let's start to build a drupal user??
 //  $account = $form['#user'];

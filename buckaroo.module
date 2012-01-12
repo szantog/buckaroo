@@ -24,13 +24,17 @@ function buckaroo_init() {
   if (!empty($post['bpe_result'])) {
     module_load_include('inc', 'buckaroo', 'includes/buckaroo.error');
     $error_codes = buckaroo_error_codes();
+    $vars = buckaroo_variable_get();
     if ($error_codes[$post['bpe_result']]) {
       $status = $error_codes[$post['bpe_result']]['error_level'];
       //Change 'success' to drupal_set_message default status
       if ($status == 'success') {
         $status = 'status' ;
       }
-      drupal_set_message($error_codes[$post['bpe_result']]['message'], $status);
+
+      if ($vars['show_result'] > 0) {
+        drupal_set_message($error_codes[$post['bpe_result']]['message'], $status);
+      }
     }
     // CiviCRM integration
     if (module_exists('civi_api') && $status == 'status') {
@@ -272,12 +276,14 @@ function buckaroo_variable_get() {
     'amount_title' => variable_get('BPE_amount_title', 'Choose an ammount'),
     'amount_values' => variable_get('BPE_amount_values', array('5', '10')),
     'currency' => variable_get('BPE_Currency', 'EUR'),
+    'minimum' => variable_get('BPE_minimum', ''),
     'unique_amount' => variable_get('BPE_unique_amount', ''),
     'method_title' => variable_get('BPE_method_title', 'Choose your payment method'),
     'civi_title' => variable_get('BPE_civi_title', 'Enter your details'),
     'civi_profile' => variable_get('BPE_civi_profile', 'none'),
     'civi_position' => variable_get('BPE_civi_position', 0),
     'mode' => variable_get('BPE_Mode', 0),
+    'show_result' => variable_get('BPE_show_result', 0),
   );
   $vars += buckaroo_get_payment_methods();
   return $vars;

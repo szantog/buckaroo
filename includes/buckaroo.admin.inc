@@ -63,6 +63,24 @@ function buckaroo_admin_form($form_state) {
     '#description' => t('Specify a relative URL to redirect after payment is failed.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
   );
+  $form['basic']['BPE_Mode'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Test mode'),
+    '#default_value' => $vars['mode'],
+    '#description' => t('Transactions are registered with Buckaroo, but not forwarded to the provider. When we receive your transaction in good order, you will immediately be directed to the specified success page.'),
+  );
+  $form['basic']['BPE_show_result'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show result'),
+    '#default_value' => $vars['show_result'],
+    '#description' => t('Show result of transaction as drupal message.'),
+  );
+//  $form['basic']['BPE_log'] = array(
+//    '#type' => 'checkbox',
+//    '#title' => t('Log result'),
+//    '#default_value' => $vars['show_result'],
+//    '#description' => t('Show result of transaction as drupal message'),
+//  );
 
   $form['amount'] = array(
     '#type' => 'fieldset',
@@ -94,6 +112,13 @@ function buckaroo_admin_form($form_state) {
     '#size' => 60,
     '#description' => t('Title of unique amount textfield. Leave empty, if unique amount field is not necessary.'),
   );
+  $form['amount']['BPE_minimum'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Minimum'),
+    '#default_value' => $vars['minimum'],
+    '#size' => 5,
+  );
+
 
   $form['method'] = array(
     '#type' => 'fieldset',
@@ -145,18 +170,11 @@ function buckaroo_admin_form($form_state) {
       '#default_value' => $vars['civi_position'],
     );
   }
-
-  $form['BPE_Mode'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Test mode'),
-    '#default_value' => $vars['mode'],
-    '#description' => t('Transactions are registered with Buckaroo, but not forwarded to the provider. When we receive your transaction in good order, you will immediately be directed to the specified success page.'),
-  );
-
   return system_settings_form($form);
 }
 
 function buckaroo_admin_form_validate($form, &$form_state) {
+  $vars = buckaroo_variable_get();
   $form_state['values']['BPE_amount_values'] = drupal_explode_tags($form_state['values']['BPE_amount_values']);
 }
 
