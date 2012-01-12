@@ -14,7 +14,7 @@ function buckaroo_payment_form($form_state) {
   );
 
   foreach ($vars['amount_values'] as $value) {
-    if (substr($value, 0, 1) == '*') {
+    if (!isset($_GET['default_amount']) && substr($value, 0, 1) == '*') {
       $default_amount = $value;
     }
     $values[$value] = str_replace('*', '', $value) . ' ' . $vars['currency'];
@@ -29,7 +29,7 @@ function buckaroo_payment_form($form_state) {
     '#weight' => 0.5,
     'value' => array(
       '#type' => 'radios',
-      '#default_value' => $default_amount,
+      '#default_value' => in_array($default_amount, $vars['amount_values']) ? $default_amount : NULL,
       '#options' => $values,
     ),
   );
@@ -40,6 +40,7 @@ function buckaroo_payment_form($form_state) {
       '#title' => $vars['unique_amount'],
       '#size' => 15,
       '#field_suffix' => $vars['currency'],
+      '#default_value' => !in_array($default_amount, $vars['amount_values']) ? $default_amount : NULL,
     );
   }
 
