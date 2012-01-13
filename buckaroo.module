@@ -312,8 +312,9 @@ function buckaroo_create_invoice() {
  * @return
  *  an array of settings
  */
-function _buckaroo_js_settings() {
+function _buckaroo_js_settings($settings = NULL) {
   $vars = buckaroo_variable_get();
+  $cache = $settings;
   $settings = buckaroo_get_payment_methods();
   foreach ($settings as $key => $value) {
     if ($value['enabled'] != 1) {
@@ -321,6 +322,7 @@ function _buckaroo_js_settings() {
     }
   }
   $settings['BPE_minimum'] = $vars['minimum'];
+  $settings += $cache;
   return $settings;
 }
 

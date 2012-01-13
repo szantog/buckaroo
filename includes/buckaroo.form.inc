@@ -5,13 +5,7 @@ function buckaroo_payment_form($form_state) {
   $values = array();
   $vars = buckaroo_variable_get();
   $default_amount = isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0];
-
-  $form['#attached']['js'][] = drupal_get_path('module', 'buckaroo') . '/js/buckaroo.js';
-
-  $form['#attached']['js'][] = array(
-    'data' => array('Buckaroo' => _buckaroo_js_settings()),
-    'type' => 'setting',
-  );
+  $settings = array();
 
   foreach ($vars['amount_values'] as $value) {
     if (!isset($_GET['default_amount']) && substr($value, 0, 1) == '*') {
@@ -21,6 +15,14 @@ function buckaroo_payment_form($form_state) {
 
     $values[$value] = str_replace('*', '', $value) . ' ' . $vars['currency'];
   }
+
+  $settings['default_amount'] = str_replace('*', '', $default_amount);
+  $form['#attached']['js'][] = drupal_get_path('module', 'buckaroo') . '/js/buckaroo.js';
+
+  $form['#attached']['js'][] = array(
+    'data' => array('Buckaroo' => _buckaroo_js_settings($settings)),
+    'type' => 'setting',
+  );
 
   $form['amount'] = array(
     '#prefix' => !empty($vars['amount_title']) ? "<h3>{$vars['amount_title']}</h3>" : NULL,

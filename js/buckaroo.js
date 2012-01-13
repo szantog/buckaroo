@@ -17,7 +17,7 @@ var Buckaroo = {};
 
       var BPE_Amount = $('input[name=BPE_Amount]');
       // The amount of payment transfer to Buckaroo
-      var amount = $('#edit-amount :radio:first', BuckarooContext).val();
+      var amount = Drupal.settings.Buckaroo.default_amount;
 
       // Get new signature value based on new amount
       Buckaroo.GetSignature = function() {
