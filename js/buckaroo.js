@@ -9,7 +9,7 @@ var Buckaroo = {};
   var BuckarooForm = $('#buckaroo-payment-form');
   var BuckarooContext = '#buckaroo-payment-form'
   var WrongKey = false;
-
+  var ErrorSent = {};
 
 
   Drupal.behaviors.buckaroo = {
@@ -49,7 +49,21 @@ var Buckaroo = {};
           return true;
         }
       };
-      
+
+      Buckaroo.error = function(text, from) {
+        var parent = $(from).parents(".form-item");
+        var msg = $('<div class="clear error">' + Drupal.t(text) + '</div>');
+
+        if (ErrorSent[text] != true) {
+          msg.hide();
+          $(parent).append(msg);
+          ErrorSent[text] = true;
+          //debugger;
+          msg.fadeIn();
+        };
+
+      };
+
       // Remove checked, if uniqueamont field get focus.
       $('#edit-uniqueamount', BuckarooContext).focus (function () {
         $('#edit-amount :radio', BuckarooContext).attr('checked', false);
@@ -58,7 +72,7 @@ var Buckaroo = {};
       // If no unique amount value, make the first radio checked.
       // else set the BPE_value
       $('#edit-uniqueamount', BuckarooContext).blur (function () {
-        if ($(this).val == '') {
+        if ($(this).val() == '') {
           $('#edit-amount :radio:first', BuckarooContext).attr('checked', true);
         }
         else {
@@ -74,23 +88,14 @@ var Buckaroo = {};
 
       // Disable the non-numeric characters.
       $('#edit-uniqueamount', BuckarooContext).keydown(function(event) {
-        var msg = $('<div class="clear error">' + Drupal.t('Only numbers are allowed.') + '</div>');
         // Allow only backspace and delete and tab
         if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9) {
-          WrongKey = false;
+          return;
         }
-        else {
-            // Ensure that it is a number and stop the keypress
-          if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-            var parent = $(this).parents(".form-item");
-            if (WrongKey == false) {
-              msg.hide();
-              $(parent).append(msg);
-              WrongKey = true;
-              msg.fadeIn();
-            }
-            event.preventDefault();
-          }
+          // Ensure that it is a number and stop the keypress
+        if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+          Buckaroo.error('Only numbers are allowed.', $(this).get());
+          event.preventDefault();
         }
       });
 
