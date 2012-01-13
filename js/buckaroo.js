@@ -18,6 +18,7 @@ var Buckaroo = {};
       var BPE_Amount = $('input[name=BPE_Amount]');
       // The amount of payment transfer to Buckaroo
       var amount = Drupal.settings.Buckaroo.default_amount;
+      var minimum = Drupal.settings.Buckaroo.BPE_minimum;
 
       // Get new signature value based on new amount
       Buckaroo.GetSignature = function() {
@@ -60,6 +61,10 @@ var Buckaroo = {};
             ret = false;
           }
         });
+        if ($('#edit-uniqueamount', BuckarooContext).val() != '' && $('#edit-uniqueamount', BuckarooContext).val() < minimum) {
+          Buckaroo.error('The amount should be greater than ' + minimum + '.', $('#edit-uniqueamount', BuckarooContext));
+          ret = false;
+        }
         return ret;
       };
 
