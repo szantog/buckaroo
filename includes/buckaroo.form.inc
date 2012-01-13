@@ -17,6 +17,8 @@ function buckaroo_payment_form($form_state) {
     if (!isset($_GET['default_amount']) && substr($value, 0, 1) == '*') {
       $default_amount = $value;
     }
+    //@todo need something to do with *10 index..
+
     $values[$value] = str_replace('*', '', $value) . ' ' . $vars['currency'];
   }
 
@@ -138,11 +140,15 @@ function buckaroo_payment_form_validate($form, &$form_state) {
     if (isset($form_state['input']['email-Primary']) && !civi_valid_email_address($form_state['input']['email-Primary'])) {
       form_set_error('email-Primary');
     }
-    if (!empty($vars['minimum']) && $form_state['values']['unique_amount'] < $vars['minimum']) {
+
+    $form_state['values']['value'] = str_replace('*', '', $form_state['values']['value']);
+
+    if (empty($form_state['values']['value']) && !empty($vars['minimum']) && $form_state['values']['unique_amount'] < $vars['minimum']) {
       form_set_error('unique_amount',
         t('The amount should be greater, than %minimum.',
           array('%minimum' => $vars['minimum'])));
     }
+    //dsm(get_defined_vars());
   }
 //  @todo let's start to build a drupal user??
 //  $account = $form['#user'];

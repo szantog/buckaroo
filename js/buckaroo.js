@@ -39,16 +39,46 @@ var Buckaroo = {};
       };
 
       Buckaroo.valid = function() {
-        var error = false;
-        $("#buckaroo-payment-form .required").each(function() {
-          if ($(this).val() == '') {
-            error = true;
+        var ret = true;
+        $("#buckaroo-payment-form :input:not(:hidden)").each(function() {
+          var parent = $(this).parents(".form-item");
+          var value = $(this).val();
+          // label should contain children elements, no need that text
+          var label = $('label', $(parent))
+            .clone()
+            .children()
+            .remove()
+            .end()
+            .text();
+          //debugger;
+          if ($(this).hasClass('required') && $(this).val() == '') {
+            Buckaroo.error('The ' + label + ' field is required', this);
+            ret = false;
+          }
+          if ($(this).attr('name') == 'email-Primary' && !Buckaroo.ValidEmail(value)) {
+            Buckaroo.error('The ' + label + ' is not valid', this);
+            ret = false;
           }
         });
-        if (!error) {
+        return ret;
+      };
+
+      Buckaroo.IsEmailClass = function () {
+        if (indexOf('email')) {
+          return false;
+        }
+        return true;
+      }
+
+      Buckaroo.ValidEmail = function (text) {
+        var regexp = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        var match = text.match(regexp);
+
+        if (match) {
           return true;
         }
-      };
+        return false;
+      }
 
       Buckaroo.error = function(text, from) {
         var parent = $(from).parents(".form-item");
@@ -61,7 +91,6 @@ var Buckaroo = {};
           //debugger;
           msg.fadeIn();
         };
-
       };
 
       // Remove checked, if uniqueamont field get focus.
