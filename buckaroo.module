@@ -30,6 +30,14 @@ function buckaroo_init() {
       //Change 'success' to drupal_set_message default status
       if ($status == 'success') {
         $status = 'status' ;
+        if (module_exists('rules')) {
+          rules_invoke_event('buckaroo_success', $post);
+        }
+      }
+      else {
+        if (module_exists('rules')) {
+          rules_invoke_event('buckaroo_error', $post);
+        }
       }
 
       if ($vars['show_result'] > 0) {
@@ -78,6 +86,7 @@ function buckaroo_init() {
       }
     }
   }
+  //dsm(get_defined_vars());
 }
 
 /**
