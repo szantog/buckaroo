@@ -20,7 +20,7 @@ function buckaroo_init() {
   if (empty($post['bpe_result'])) {
     $post = $GLOBALS['_GET'];
   }
-  $test = url('test', array('query' => $post));
+
   if (!empty($post['bpe_result'])) {
     module_load_include('inc', 'buckaroo', 'includes/buckaroo.error');
     $error_codes = buckaroo_error_codes();
