@@ -41,9 +41,12 @@ var Buckaroo = {};
 
       Buckaroo.valid = function() {
         var ret = true;
+        var unique = $('#edit-uniqueamount', BuckarooContext).val();
+
         $("#buckaroo-payment-form :input:not(:hidden)").each(function() {
           var parent = $(this).parents(".form-item");
           var value = $(this).val();
+
           // label should contain children elements, no need that text
           var label = $('label', $(parent))
             .clone()
@@ -61,7 +64,7 @@ var Buckaroo = {};
             ret = false;
           }
         });
-        if ($('#edit-uniqueamount', BuckarooContext).val() != '' && $('#edit-uniqueamount', BuckarooContext).val() < minimum) {
+        if (unique != '' && unique < minimum) {
           Buckaroo.error('The amount should be greater than ' + minimum + '.', $('#edit-uniqueamount', BuckarooContext));
           ret = false;
         }
@@ -108,6 +111,7 @@ var Buckaroo = {};
       $('#edit-uniqueamount', BuckarooContext).blur (function () {
         if ($(this).val() == '') {
           $('#edit-amount :radio:first', BuckarooContext).attr('checked', true);
+          amount = $('#edit-amount :radio:first', BuckarooContext).val();
         }
         else {
           amount = $(this).val();

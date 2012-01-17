@@ -7,9 +7,10 @@ function buckaroo_payment_form($form_state) {
   $default_amount = isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0];
   $settings = array();
 
-  foreach ($vars['amount_values'] as $value) {
+  foreach ($vars['amount_values'] as &$value) {
     if (!isset($_GET['default_amount']) && substr($value, 0, 1) == '*') {
-      $default_amount = $value;
+      $default_amount = str_replace('*', '', $value);
+      $value = $default_amount;
     }
     //@todo need something to do with *10 index..
 
@@ -111,7 +112,7 @@ function buckaroo_payment_form($form_state) {
   }
 
   $form += buckaroo_get_hidden_elements();
-  //dsm(get_defined_vars());
+  dsm(get_defined_vars());
   return $form;
 }
 
