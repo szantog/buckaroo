@@ -118,6 +118,13 @@ function buckaroo_admin_form($form_state) {
     '#default_value' => $vars['minimum'],
     '#size' => 5,
   );
+  $form['amount']['BPE_minimum_error'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Error message'),
+    '#default_value' => $vars['minimum_error'],
+    '#size' => 60,
+    '#description' => t('The error message, if the value of unique amount is less, than minimum. You should use the placholder @minimum to show the value of minimum amount'),
+  );
 
 
   $form['method'] = array(

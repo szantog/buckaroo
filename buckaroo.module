@@ -286,6 +286,7 @@ function buckaroo_variable_get() {
     'amount_values' => variable_get('BPE_amount_values', array('5', '10')),
     'currency' => variable_get('BPE_Currency', 'EUR'),
     'minimum' => variable_get('BPE_minimum', ''),
+    'minimum_error' => variable_get('BPE_minimum_error', 'The amount should be greater than @minimum'),
     'unique_amount' => variable_get('BPE_unique_amount', ''),
     'method_title' => variable_get('BPE_method_title', 'Choose your payment method'),
     'civi_title' => variable_get('BPE_civi_title', 'Enter your details'),
@@ -331,6 +332,7 @@ function _buckaroo_js_settings($settings = NULL) {
     }
   }
   $settings['BPE_minimum'] = $vars['minimum'];
+  $settings['BPE_minimum_error'] = format_string($vars['minimum_error'], array('@minimum' => $vars['minimum']));
   $settings += $cache;
   return $settings;
 }

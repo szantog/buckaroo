@@ -112,7 +112,7 @@ function buckaroo_payment_form($form_state) {
   }
 
   $form += buckaroo_get_hidden_elements();
-  dsm(get_defined_vars());
+  //dsm(get_defined_vars());
   return $form;
 }
 
