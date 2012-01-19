@@ -22,6 +22,8 @@ function buckaroo_init() {
   }
 
   if (!empty($post['bpe_result'])) {
+    // Let other modules to modify $post array;
+    drupal_alter('buckaroo_result', $post);
     module_load_include('inc', 'buckaroo', 'includes/buckaroo.error');
     $error_codes = buckaroo_error_codes();
     $vars = buckaroo_variable_get();
@@ -75,16 +77,18 @@ function buckaroo_init() {
 
       //Check if CiviContribute is enabled
       if (in_array('CiviContribute', $civi_config->enableComponents)) {
-          $types = civi_get_contribution_types();
-          $contribution = new stdClass();
-          $contribution->total_amount = $post['bpe_amount'] / 100;
-          $contribution->contact_id = $contact_id;
-          $contribution->contribution_status_id = 1;
-          $contribution->contribution_type_id = 1;
-          $contribution->source = 'Buckaroo payment form';
-          civi_contribution_save($contribution);
+        $types = civi_get_contribution_types();
+        $contribution = new stdClass();
+        $contribution->total_amount = $post['bpe_amount'] / 100;
+        $contribution->contact_id = $contact_id;
+        $contribution->contribution_status_id = 1;
+        $contribution->contribution_type_id = 1;
+        $contribution->source = 'Buckaroo payment form';
+        civi_contribution_save($contribution, $contact);
       }
     }
+    // Let other module to make own functions.
+    module_invoke_all('buckaroo_post_result', $post);
   }
   //dsm(get_defined_vars());
 }
