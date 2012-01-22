@@ -17,8 +17,8 @@ var Buckaroo = {};
 
       var BPE_Amount = $('input[name=BPE_Amount]');
       // The amount of payment transfer to Buckaroo
-      var amount = Drupal.settings.Buckaroo.default_amount;
-      var minimum = Drupal.settings.Buckaroo.BPE_minimum;
+      var amount = parseInt(Drupal.settings.Buckaroo.default_amount);
+      var minimum = parseInt(Drupal.settings.Buckaroo.BPE_minimum);
       var minimum_error = Drupal.settings.Buckaroo.BPE_minimum_error;
 
       // Get new signature value based on new amount
@@ -42,7 +42,7 @@ var Buckaroo = {};
 
       Buckaroo.valid = function() {
         var ret = true;
-        var unique = $('#edit-uniqueamount', BuckarooContext).val();
+        var unique = parseInt($('#edit-uniqueamount', BuckarooContext).val());
 
         $("#buckaroo-payment-form :input:not(:hidden)").each(function() {
           var parent = $(this).parents(".form-item");
