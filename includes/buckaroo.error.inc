@@ -248,62 +248,62 @@ function buckaroo_error_codes() {
     ),
     190 => array(
       'status_code' => '190',
-      'message' => 'Success',
+      'message' => t('Success'),
       'error_level' => 'success',
     ),
     201 => array(
       'status_code' => '201',
-      'message' => 'There is a timeout occurred while processing the transactie.Gebruik the TransactionKey to re-check the processing status.',
+      'message' => t('There is a timeout occurred while processing the transactie.Gebruik the TransactionKey to re-check the processing status.'),
       'error_level' => 'error',
     ),
     203 => array(
       'status_code' => '203',
-      'message' => 'The transaction was declined. The credit card number is blocked.',
+      'message' => t('The transaction was declined. The credit card number is blocked.'),
       'error_level' => 'error',
     ),
     204 => array(
       'status_code' => '204',
-      'message' => 'The transaction was declined. The IP address is blocked',
+      'message' => t('The transaction was declined. The IP address is blocked'),
       'error_level' => 'error',
     ),
     205 => array(
       'status_code' => '205',
-      'message' => 'The transaction was declined. The country of issuance of this card is blocked',
+      'message' => t('The transaction was declined. The country of issuance of this card is blocked'),
       'error_level' => 'error',
     ),
     206 => array(
       'status_code' => '206',
-      'message' => 'The transaction was declined. The bill [value] is being or has been paid.',
+      'message' => t('The transaction was declined. The bill [value] is being or has been paid.'),
       'error_level' => 'error',
     ),
     207 => array(
       'status_code' => '207',
-      'message' => 'The transaction was declined. The maximum number of attempts to pay bill [value] is exceeded.',
+      'message' => t('The transaction was declined. The maximum number of attempts to pay bill [value] is exceeded.'),
       'error_level' => 'error',
     ),
     242 => array(
       'status_code' => '242',
-      'message' => 'Commission payment processes guarantee a successful',
+      'message' => t('Commission payment processes guarantee a successful'),
       'error_level' => 'success',
     ),
     243 => array(
       'status_code' => '243',
-      'message' => 'Fee collection agency guarantees payment successfully processed',
+      'message' =>  t('Fee collection agency guarantees payment successfully processed'),
       'error_level' => 'success',
     ),
     244 => array(
       'status_code' => '244',
-      'message' => 'Buckaroo commission payment processes guarantee a successful',
+      'message' => t('Buckaroo commission payment processes guarantee a successful'),
       'error_level' => 'success',
     ),
     245 => array(
       'status_code' => '245',
-      'message' => 'Cost button collection agency guarantees payment successfully processed',
+      'message' => t('Cost button collection agency guarantees payment successfully processed'),
       'error_level' => 'success',
     ),
     246 => array(
       'status_code' => '246',
-      'message' => 'Tax collection agency guarantees payment successfully processed',
+      'message' => t('Tax collection agency guarantees payment successfully processed'),
       'error_level' => 'success',
     ),
     247 => array(
@@ -708,22 +708,22 @@ function buckaroo_error_codes() {
     ),
     801 => array(
       'status_code' => '801',
-      'message' => 'This PayPal transaction has been successfully processed.',
+      'message' => 'This iDEAL transaction has been successfully processed.',
       'error_level' => 'success',
     ),
     802 => array(
       'status_code' => '802',
-      'message' => 'This PayPal transaction has been canceled by the consumer. Trx: [value]',
+      'message' => 'This iDEAL transaction has been canceled by the consumer. Trx: [value]',
       'error_level' => 'error',
     ),
     803 => array(
       'status_code' => '803',
-      'message' => 'This PayPal transaction is not within the maximum time allowed out. Trx: [value]',
+      'message' => 'This iDEAL transaction is not within the maximum time allowed out. Trx: [value]',
       'error_level' => 'error',
     ),
     804 => array(
       'status_code' => '804',
-      'message' => 'This PayPal transaction for some reason the bank failed. Trx: [value]',
+      'message' => 'This iDEAL transaction for some reason the bank failed. Trx: [value]',
       'error_level' => 'error',
     ),
     810 => array(
