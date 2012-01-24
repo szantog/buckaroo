@@ -127,8 +127,8 @@ var Buckaroo = {};
 
       // Disable the non-numeric characters.
       $('#edit-uniqueamount', BuckarooContext).keydown(function(event) {
-        // Allow only backspace and delete and tab
-        if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9) {
+        // Allow only backspace, delete, tab, enter
+        if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 13) {
           return;
         }
           // Ensure that it is a number and stop the keypress
