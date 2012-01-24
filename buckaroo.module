@@ -72,6 +72,7 @@ function buckaroo_init() {
         $saved = civi_contact_save($contact);
         if (!empty($saved['values'])) {
           $contact_id = $saved['id'];
+          $contact->contact_id = $contact_id;
         }
       }
 
@@ -90,7 +91,6 @@ function buckaroo_init() {
     // Let other module to make own functions.
     module_invoke_all('buckaroo_post_result', $post);
   }
-  //dsm(get_defined_vars());
 }
 
 /**
