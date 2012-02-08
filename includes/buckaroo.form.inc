@@ -110,7 +110,6 @@ function buckaroo_payment_form($form_state) {
       '#weight' => $vars['civi_position'],
     );
   }
-  dsm(get_defined_vars());
   $form += buckaroo_get_hidden_elements();
   //dsm(get_defined_vars());
   return $form;
