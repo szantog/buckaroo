@@ -48,44 +48,47 @@ function buckaroo_init() {
     }
     // CiviCRM integration
     if (module_exists('civi_api') && $status == 'status') {
-      $civi_config = civi_get_config();
-      if ($contacts = civi_contact_load_by_email($post['email-Primary'])) {
-        $contact = reset($contacts);
-        $contact_id = $contact->contact_id;
-      }
-      else {
-        //@todo: This is not flexible, need to find a way to pass this values
-        // to civicrm like a profile submit.
-        $contact = new stdClass();
-        $contact->email = $post['email-Primary'];
-        $contact->first_name = $post['first_name'];
-        $contact->last_name = $post['last_name'];
-        $contact->birth_date = $post['birth_date'];
-        $contact->prefix_id = $post['individual_prefix'];
-        $contact->contact_type = 'Individual';
-        $contact->address['default'] = array(
-          'postal_code' => $post['postal_code-Primary'],
-          'street_address' => $post['address_name-Primary'],
-          'city' => $post['city-Primary'],
-          'country_id' => $post['country-Primary'],
-        );
-        $saved = civi_contact_save($contact);
-        if (!empty($saved['values'])) {
-          $contact_id = $saved['id'];
-          $contact->contact_id = $contact_id;
+      if (civicrm_initialize()) {
+        $civi_config = civi_get_config();
+        if ($contacts = civi_contact_load_by_email($post['email-Primary'])) {
+          $contact = reset($contacts);
+          $contact_id = $contact->contact_id;
         }
-      }
+        else {
+          //@todo: This is not flexible, need to find a way to pass this values
+          // to civicrm like a profile submit.
+          $contact = new stdClass();
+          $contact->email = $post['email-Primary'];
+          $contact->first_name = $post['first_name'];
+          $contact->last_name = $post['last_name'];
+          $contact->birth_date = $post['birth_date'];
+          $contact->prefix_id = $post['individual_prefix'];
+          $contact->contact_type = 'Individual';
+          $contact->address = array();
+          $contact->address['default'] = array(
+            'postal_code' => $post['postal_code-Primary'],
+            'street_address' => $post['address_name-Primary'],
+            'city' => $post['city-Primary'],
+            'country_id' => $post['country-Primary'],
+          );
+          $saved = civi_contact_save($contact);
+          if (!empty($saved['values'])) {
+            $contact_id = $saved['id'];
+            $contact->contact_id = $contact_id;
+          }
+        }
 
-      //Check if CiviContribute is enabled
-      if (in_array('CiviContribute', $civi_config->enableComponents)) {
-        $types = civi_get_contribution_types();
-        $contribution = new stdClass();
-        $contribution->total_amount = $post['bpe_amount'] / 100;
-        $contribution->contact_id = $contact_id;
-        $contribution->contribution_status_id = 1;
-        $contribution->contribution_type_id = 1;
-        $contribution->source = 'Buckaroo payment form';
-        civi_contribution_save($contribution, $contact);
+        //Check if CiviContribute is enabled
+        if (in_array('CiviContribute', $civi_config->enableComponents)) {
+          $types = civi_get_contribution_types();
+          $contribution = new stdClass();
+          $contribution->total_amount = $post['bpe_amount'] / 100;
+          $contribution->contact_id = $contact_id;
+          $contribution->contribution_status_id = 1;
+          $contribution->contribution_type_id = 1;
+          $contribution->source = 'Buckaroo payment form';
+          civi_contribution_save($contribution, $contact);
+        }
       }
     }
     // Let other module to make own functions.
