@@ -7,6 +7,9 @@ function buckaroo_payment_form($form_state) {
   $default_amount = isset($_GET['default_amount']) ? $_GET['default_amount'] : $vars['amount_values'][0];
   $settings = array();
 
+  if ($vars['mode'] == 1) {
+    drupal_set_message(t('The payment form is on test mode. Transactions will be registered with Buckaroo, but not forwarded to the provider. '), 'warning');
+  }
   foreach ($vars['amount_values'] as &$value) {
     if (!isset($_GET['default_amount']) && substr($value, 0, 1) == '*') {
       $default_amount = str_replace('*', '', $value);
