@@ -103,8 +103,8 @@ function buckaroo_error_codes() {
     ),
     121 => array(
       'status_code' => '121',
-      'message' => t('Transaction Status: authorization failed'),
-      'error_level' => 'error',
+      'message' => t('Transaction status: authorisation successful.'),
+      'error_level' => 'success',
     ),
     122 => array(
       'status_code' => '122',
