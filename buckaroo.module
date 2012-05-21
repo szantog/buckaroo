@@ -72,6 +72,8 @@ function buckaroo_init() {
             'country_id' => $post['country-Primary'],
           );
           $saved = civi_contact_save($contact);
+          $contact_id = $saved->contact_id;
+          $contact->contact_id = $contact_id;
         }
 
         //Check if CiviContribute is enabled
