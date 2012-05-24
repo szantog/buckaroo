@@ -145,9 +145,19 @@ var Buckaroo = {};
         eval('var FormAction = settings.Buckaroo.' + name + '.action;');
 
         if (Buckaroo.valid()) {
+          // Remove values that no need to post to buckaroo. This need to
+          // prevent too long get back url for the most of web servers settings.
+          $('input[name=form_build_id]').remove();
+          $('input[name=form_id]').remove();
+          $('input[name=form_token]').remove();
+          $('input[name=MAX_FILE_SIZE]').remove();
+          $('input[name=_qf_default]').remove();
+          $('input[value=CiviCRM Dummy Field for Drupal]').remove();
+
           BPE_Amount.val(amount * 100);
           var sign = Buckaroo.GetSignature();
           $('input[name=BPE_Signature2]', context).val(sign);
+
           $('#buckaroo-payment-form').attr("action", FormAction);
           //e.preventDefault();
         }
